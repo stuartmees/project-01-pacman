@@ -1,0 +1,24 @@
+*{
+  box-sizing: border-box;
+}
+
+.game{
+  display: flex;
+  flex-wrap: wrap;
+  height: 550px;
+  width: 550px;
+  border: grey 1px solid;
+}
+
+.box{
+  height: calc(100%/30);
+  width: calc(100%/30);
+  border: blue 1px solid;
+}
+
+.pacman{
+  background-image: url('../images/pacman.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 10px;
+}
