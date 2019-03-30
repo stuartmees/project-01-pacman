@@ -4,10 +4,11 @@ window.addEventListener('DOMContentLoaded', function(){
 
   const width = 10 //Set the width of the game grid
   let position = 11 //Set the starting position and define the position variable to store the current position of pacman
+  let ghostPosition = 65
   let score = 0 //Initialise player score variable
   const gridBoxes = [] //Initialise the array to store the gridBoxes in
   let keyCode //Initialise the keyCode variable to store the code of the key when pressed
-  let interval //Initialise the  variable to store the setInterval method
+  // let interval //Initialise the  variable to store the setInterval method
   let newPosition //Initialise the newPOsition variable. This allows new position to be checked for validity beofre setting as position
   const numberOfBoxes = width*width
 
@@ -29,7 +30,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
   gridBoxes[position].classList.add('pacman')//Puts Pacman wherever the the position dictates
 
-
+  gridBoxes[ghostPosition].classList.add('ghost')//Puts ghost wherever  ghost position dictates
 
   //Sets the relvant grid boxes as part of the wall
   walls.forEach((wallIndex) => gridBoxes[wallIndex].classList.add('wall'))
@@ -113,17 +114,36 @@ window.addEventListener('DOMContentLoaded', function(){
     }
   }
 
-  //When Pacman eats a dot reomve the Pacdot from the grid box and incxreas and update score.
-
-
-  //   if (gridBox.contains(span) )
-  //
-  //   }
-  // })
-
+  function ghostMove(){
+    const direction = Math.floor(Math.random()*4)
+    switch(direction){
+      case 0:
+        gridBoxes[ghostPosition].classList.remove('ghost')
+        ghostPosition++
+        gridBoxes[ghostPosition].classList.add('ghost')
+        break
+      case 1:
+        gridBoxes[ghostPosition].classList.remove('ghost')
+        ghostPosition--
+        gridBoxes[ghostPosition].classList.add('ghost')
+        break
+      case 2:
+        gridBoxes[ghostPosition].classList.remove('ghost')
+        ghostPosition = ghostPosition - width
+        gridBoxes[ghostPosition].classList.add('ghost')
+        break
+      case 3:
+        gridBoxes[ghostPosition].classList.remove('ghost')
+        ghostPosition = ghostPosition + width
+        gridBoxes[ghostPosition].classList.add('ghost')
+        break
+    }
+  }
 
 
   pacDots.forEach(makePacDot)//Puts a Pacdot in the relevant grid boxes
+
+  const ghostInterval = setInterval(ghostMove, 1000)
 
   //Invoke the relevant move funtion depending on which arrow key is pressed.
   document.addEventListener('keydown', function(e){
