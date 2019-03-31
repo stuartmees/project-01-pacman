@@ -26,8 +26,29 @@
   background-size: 30px;
 }
 
-.ghost{
-  background-image: url('../images/ghost.png');
+.red-ghost{
+  background-image: url('../images/redghost.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 40px;
+}
+
+.yellow-ghost{
+  background-image: url('../images/yellowghost.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 40px;
+}
+
+.pink-ghost{
+  background-image: url('../images/pinkghost.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 40px;
+}
+
+.blue-ghost{
+  background-image: url('../images/blueghost.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 40px;
