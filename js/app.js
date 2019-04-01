@@ -5,6 +5,7 @@ window.addEventListener('DOMContentLoaded', function(){
   const width = 10 //Set the width of the game grid
   let position = 11 //Set the starting position and define the position variable to store the current position of pacman
   let ghostDirection
+  let newPosition
   let pacmanDirection
   let redGhostPosition = 44
   let yellowGhostPosition = 45
@@ -249,27 +250,47 @@ window.addEventListener('DOMContentLoaded', function(){
   }
 
   function ghostInitiate(ghostClass, ghostPosition){
-    const direction = Math.floor(Math.random()*4)
+
+    const xDist = (position%width)-(ghostPosition%width)
+    const yDist = Math.floor(ghostPosition/width)-Math.floor(position/width)
+    let direction
+
+    if ((xDist>0) && (yDist>0)){
+      direction = (xDist>yDist) ? 0 : 2
+    }
+
+    if ((xDist<0) && (yDist<0)){
+      direction = (Math.abs(xDist)>Math.abs(yDist)) ? 1 : 3
+    }
+
+    if ((xDist>0) && (yDist<0)){
+      direction = ((xDist)>Math.abs(yDist)) ? 0 : 3
+    }
+
+    if ((xDist<0) && (yDist>0)){
+      direction = ((Math.abs(xDist))>yDist) ? 1 : 2
+    }
+
     switch(direction){
       case 0: {
-        const newPosition = ghostPosition +1
+        newPosition = ghostPosition + 1
         ghostDirection = 'forward'
         ghostMove(ghostClass, ghostPosition, newPosition)
         break
       }
       case 1: {
-        const newPosition = ghostPosition- 1
+        newPosition = ghostPosition - 1
         ghostDirection = 'backward'
         ghostMove(ghostClass, ghostPosition, newPosition)
         break
       }
       case 2: {
-        const newPosition = ghostPosition - width
+        newPosition = ghostPosition - width
         ghostMove(ghostClass, ghostPosition, newPosition)
         break
       }
       case 3: {
-        const newPosition = ghostPosition+width
+        newPosition = ghostPosition + width
         ghostMove(ghostClass, ghostPosition, newPosition)
         break
       }
