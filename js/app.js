@@ -44,11 +44,11 @@ window.addEventListener('DOMContentLoaded', function(){
 
   gridBoxes[position].classList.add('pacman')//Puts Pacman wherever the the position dictates
 
-  function startingSetup(){
+  function setup(){
     gridBoxes[redGhostPosition].classList.add('red')
     gridBoxes[yellowGhostPosition].classList.add('yellow')
-    gridBoxes[redGhostPosition].classList.add('ghost')
-    gridBoxes[yellowGhostPosition].classList.add('ghost')
+    if (!gridBoxes[redGhostPosition].classList.contains('ghost')) gridBoxes[redGhostPosition].classList.add('ghost')
+    if (!gridBoxes[yellowGhostPosition].classList.contains('ghost')) gridBoxes[yellowGhostPosition].classList.add('ghost')
     redGhostInterval = setInterval(function(){
       ghostInitiate('red', redGhostPosition)
     } , 500)
@@ -78,15 +78,7 @@ window.addEventListener('DOMContentLoaded', function(){
     clearInterval(blueGhostYellowInterval)
     clearInterval(blueGhostRedInterval)
     powerScore = 200
-    startingSetup()
-    ghostInitiate('red', redGhostPosition)
-    redGhostInterval = setInterval(function(){
-      ghostInitiate('red', redGhostPosition)
-    } , 500)
-    ghostInitiate('yellow', yellowGhostPosition)
-    yellowGhostInterval = setInterval(function(){
-      ghostInitiate('yellow', yellowGhostPosition)
-    } , 500)
+    setup()
   }
 
   function startBlueGhost(pacmanGridBox){
@@ -111,11 +103,13 @@ window.addEventListener('DOMContentLoaded', function(){
 
     const player = gridBoxes.find(box => box.classList.contains('pacman'))
     player.classList.remove('pacman')
+    player.removeAttribute('data-direction')
     pacmanGridBox.classList.add('pacman')
+
 
     pacmanGridBox.setAttribute('data-direction', pacmanDirection)
 
-    if ((pacmanGridBox.classList.contains('ghost')) && (!pacmanGridBox.classList.contains('blue'))) ghostReset()
+    if ((pacmanGridBox.classList.contains('ghost')) && (!pacmanGridBox.classList.contains('blue'))) deathClear()
 
     if (pacmanGridBox.classList.contains('pac-dot')){
       pacmanGridBox.classList.remove('pac-dot')
@@ -196,7 +190,7 @@ window.addEventListener('DOMContentLoaded', function(){
     }
   }
 
-  function ghostSetUp(){
+  function deathSetUp(){
     livesElem.innerText = lives
     scoreElem.innerText = score
     position = 11
@@ -218,7 +212,7 @@ window.addEventListener('DOMContentLoaded', function(){
     } , 500)
   }
 
-  function ghostReset(){
+  function deathClear(){
     clearInterval(redGhostInterval)
     clearInterval(yellowGhostInterval)
     gridBoxes[position].classList.remove('pacman')
@@ -229,7 +223,7 @@ window.addEventListener('DOMContentLoaded', function(){
     lives--
     score = 0
     if (lives>0){
-      setTimeout(ghostSetUp, 2000)
+      setTimeout(deathSetUp, 2000)
     } else {
       livesElem.innerText = 'Game Over!'
     }
@@ -238,14 +232,28 @@ window.addEventListener('DOMContentLoaded', function(){
   function ghostMove(ghostClass, ghostPosition, newPosition){
     if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('ghost'))){
       gridBoxes[ghostPosition].classList.remove(ghostClass, 'ghost')
+      gridBoxes[ghostPosition].removeAttribute('data-direction')
       ghostPosition = newPosition
       gridBoxes[ghostPosition].classList.add(ghostClass, 'ghost')
       gridBoxes[ghostPosition].setAttribute('data-direction', ghostDirection)
       if (gridBoxes[ghostPosition].classList.contains('pacman')){
-        ghostReset()
+        deathClear()
       }
       if (ghostClass === 'red') return redGhostPosition = ghostPosition
       if (ghostClass === 'yellow') return yellowGhostPosition = ghostPosition
+    } else {
+      if (ghostClass==='red'){
+        clearInterval(redGhostInterval)
+        redGhostInterval = setInterval(function(){
+          ghostInitiate('red', redGhostPosition)
+        } , 500)
+      }
+      if (ghostClass === 'yellow'){
+        clearInterval(yellowGhostInterval)
+        yellowGhostInterval = setInterval(function(){
+          ghostInitiate('yellow', yellowGhostPosition)
+        } , 500)
+      }
     }
   }
 
@@ -259,7 +267,7 @@ window.addEventListener('DOMContentLoaded', function(){
       direction = (xDist>yDist) ? 0 : 2
     }
 
-    if ((xDist<0) && (yDist<0)){
+    if ((xDist<0) && (yDist<0)) {
       direction = (Math.abs(xDist)>Math.abs(yDist)) ? 1 : 3
     }
 
@@ -270,6 +278,10 @@ window.addEventListener('DOMContentLoaded', function(){
     if ((xDist<0) && (yDist>0)){
       direction = ((Math.abs(xDist))>yDist) ? 1 : 2
     }
+
+    if (xDist===0) direction = (yDist>0) ? 2 : 3
+
+    if (yDist===0) direction = (xDist>0) ? 0 : 1
 
     switch(direction){
       case 0: {
@@ -286,11 +298,13 @@ window.addEventListener('DOMContentLoaded', function(){
       }
       case 2: {
         newPosition = ghostPosition - width
+        ghostDirection = 'up'
         ghostMove(ghostClass, ghostPosition, newPosition)
         break
       }
       case 3: {
         newPosition = ghostPosition + width
+        ghostDirection = 'down'
         ghostMove(ghostClass, ghostPosition, newPosition)
         break
       }
@@ -335,7 +349,7 @@ window.addEventListener('DOMContentLoaded', function(){
     }
   }
 
-  startingSetup()
+  setup()
 
   //Invoke the relevant move funtion depending on which arrow key is pressed.
   document.addEventListener('keydown', function(e){
