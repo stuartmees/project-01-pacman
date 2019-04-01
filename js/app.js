@@ -272,7 +272,26 @@ window.addEventListener('DOMContentLoaded', function(){
   }
 
   function redGhostMove(){
-    const direction = Math.floor(Math.random()*4)
+    const xDist = (position%width)-(redGhostPosition%width)
+    const yDist = Math.floor(redGhostPosition/width)-Math.floor(position/width)
+    let direction
+
+    if (xDist>0 && yDist>0){
+      direction = (xDist>yDist) ? 0 : 2
+    }
+
+    if (xDist<0 && yDist<0){
+      direction = (xDist<yDist) ? 2 : 3
+    }
+
+    if (xDist>0 && yDist<0){
+      direction = (xDist>Math.abs(yDist)) ? 0 : 3
+    }
+
+    if (xDist<0 && yDist>0){
+      direction = (Math.abs(xDist)>yDist) ? 1 : 2
+    }
+
     switch(direction){
       case 0: redGhostMoveRight()
         break
