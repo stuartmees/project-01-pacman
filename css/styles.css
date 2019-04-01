@@ -40,8 +40,32 @@
   background-size: 30px;
 }
 
+.pacman[data-direction="forward"] {
+  transform: scaleX(1);
+}
+
+.pacman[data-direction="backward"] {
+  transform: scaleX(-1);
+}
+
+.pacman[data-direction="up"] {
+  transform: rotate(-90deg);
+}
+
+.pacman[data-direction="down"] {
+  transform: rotate(90deg);
+}
+
 .ghost{
 
+}
+
+.ghost[data-direction="forward"] {
+  transform: scaleX(1);
+}
+
+.ghost[data-direction="backward"] {
+  transform: scaleX(-1);
 }
 
 .red{

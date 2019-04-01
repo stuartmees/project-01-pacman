@@ -4,6 +4,8 @@ window.addEventListener('DOMContentLoaded', function(){
 
   const width = 10 //Set the width of the game grid
   let position = 11 //Set the starting position and define the position variable to store the current position of pacman
+  let ghostDirection
+  let pacmanDirection
   let redGhostPosition = 44
   let yellowGhostPosition = 45
   let score = 0 //Initialise player score variable
@@ -47,10 +49,10 @@ window.addEventListener('DOMContentLoaded', function(){
     gridBoxes[redGhostPosition].classList.add('ghost')
     gridBoxes[yellowGhostPosition].classList.add('ghost')
     redGhostInterval = setInterval(function(){
-      ghostMove('red', redGhostPosition)
+      ghostInitiate('red', redGhostPosition)
     } , 500)
     yellowGhostInterval = setInterval(function(){
-      ghostMove('yellow', yellowGhostPosition)
+      ghostInitiate('yellow', yellowGhostPosition)
     } , 500)
   }
 
@@ -76,13 +78,13 @@ window.addEventListener('DOMContentLoaded', function(){
     clearInterval(blueGhostRedInterval)
     powerScore = 200
     startingSetup()
-    ghostMove('red', redGhostPosition)
+    ghostInitiate('red', redGhostPosition)
     redGhostInterval = setInterval(function(){
-      ghostMove('red', redGhostPosition)
+      ghostInitiate('red', redGhostPosition)
     } , 500)
-    ghostMove('yellow', yellowGhostPosition)
+    ghostInitiate('yellow', yellowGhostPosition)
     yellowGhostInterval = setInterval(function(){
-      ghostMove('yellow', yellowGhostPosition)
+      ghostInitiate('yellow', yellowGhostPosition)
     } , 500)
   }
 
@@ -92,13 +94,13 @@ window.addEventListener('DOMContentLoaded', function(){
     pacmanGridBox.classList.remove('power-dot')
     gridBoxes[redGhostPosition].classList.add('blue')
     gridBoxes[yellowGhostPosition].classList.add('blue')
-    blueGhostMove('yellow', yellowGhostPosition)
+    blueGhostDirection('yellow', yellowGhostPosition)
     blueGhostYellowInterval = setInterval(function(){
-      blueGhostMove('yellow', yellowGhostPosition)
+      blueGhostDirection('yellow', yellowGhostPosition)
     }, 1000)
-    blueGhostMove('red', redGhostPosition)
+    blueGhostDirection('red', redGhostPosition)
     blueGhostRedInterval = setInterval(function(){
-      blueGhostMove('red', redGhostPosition)
+      blueGhostDirection('red', redGhostPosition)
     }, 1000)
     setTimeout(endBlueGhost, 10000)
   }
@@ -109,6 +111,8 @@ window.addEventListener('DOMContentLoaded', function(){
     const player = gridBoxes.find(box => box.classList.contains('pacman'))
     player.classList.remove('pacman')
     pacmanGridBox.classList.add('pacman')
+
+    pacmanGridBox.setAttribute('data-direction', pacmanDirection)
 
     if ((pacmanGridBox.classList.contains('ghost')) && (!pacmanGridBox.classList.contains('blue'))) ghostReset()
 
@@ -145,6 +149,7 @@ window.addEventListener('DOMContentLoaded', function(){
       return
     } else {
       position = newPosition
+      pacmanDirection = 'forward'
       move()
     }
   }
@@ -157,6 +162,7 @@ window.addEventListener('DOMContentLoaded', function(){
       return
     } else {
       position = newPosition
+      pacmanDirection = 'backward'
       move()
     }
   }
@@ -170,6 +176,7 @@ window.addEventListener('DOMContentLoaded', function(){
       return
     } else {
       position = newPosition
+      pacmanDirection = 'up'
       move()
     }
   }
@@ -183,6 +190,7 @@ window.addEventListener('DOMContentLoaded', function(){
       return
     } else {
       position = newPosition
+      pacmanDirection = 'down'
       move()
     }
   }
@@ -202,10 +210,10 @@ window.addEventListener('DOMContentLoaded', function(){
       if (!gridBoxes[pacDotIndex].classList.contains('pac-dot')) gridBoxes[pacDotIndex].classList.add('pac-dot')
     })
     redGhostInterval = setInterval(function(){
-      ghostMove('red', redGhostPosition)
+      ghostInitiate('red', redGhostPosition)
     } , 500)
     yellowGhostInterval = setInterval(function(){
-      ghostMove('yellow', yellowGhostPosition)
+      ghostInitiate('yellow', yellowGhostPosition)
     } , 500)
   }
 
@@ -226,11 +234,12 @@ window.addEventListener('DOMContentLoaded', function(){
     }
   }
 
-  function ghostMoveDirection(ghostClass, ghostPosition, newPosition){
+  function ghostMove(ghostClass, ghostPosition, newPosition){
     if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('ghost'))){
       gridBoxes[ghostPosition].classList.remove(ghostClass, 'ghost')
       ghostPosition = newPosition
       gridBoxes[ghostPosition].classList.add(ghostClass, 'ghost')
+      gridBoxes[ghostPosition].setAttribute('data-direction', ghostDirection)
       if (gridBoxes[ghostPosition].classList.contains('pacman')){
         ghostReset()
       }
@@ -239,33 +248,35 @@ window.addEventListener('DOMContentLoaded', function(){
     }
   }
 
-  function ghostMove(ghostClass, ghostPosition){
+  function ghostInitiate(ghostClass, ghostPosition){
     const direction = Math.floor(Math.random()*4)
     switch(direction){
       case 0: {
         const newPosition = ghostPosition +1
-        ghostMoveDirection(ghostClass, ghostPosition, newPosition)
+        ghostDirection = 'forward'
+        ghostMove(ghostClass, ghostPosition, newPosition)
         break
       }
       case 1: {
         const newPosition = ghostPosition- 1
-        ghostMoveDirection(ghostClass, ghostPosition, newPosition)
+        ghostDirection = 'backward'
+        ghostMove(ghostClass, ghostPosition, newPosition)
         break
       }
       case 2: {
         const newPosition = ghostPosition - width
-        ghostMoveDirection(ghostClass, ghostPosition, newPosition)
+        ghostMove(ghostClass, ghostPosition, newPosition)
         break
       }
       case 3: {
         const newPosition = ghostPosition+width
-        ghostMoveDirection(ghostClass, ghostPosition, newPosition)
+        ghostMove(ghostClass, ghostPosition, newPosition)
         break
       }
     }
   }
 
-  function blueGhostMoveDirection(ghostClass, ghostPosition, newPosition){
+  function blueGhostMove(ghostClass, ghostPosition, newPosition){
     if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('ghost'))){
       gridBoxes[ghostPosition].classList.remove('ghost', 'blue')
       gridBoxes[ghostPosition].classList.remove(ghostClass)
@@ -277,27 +288,27 @@ window.addEventListener('DOMContentLoaded', function(){
     }
   }
 
-  function blueGhostMove(ghostClass, ghostPosition){
+  function blueGhostDirection(ghostClass, ghostPosition){
     const direction = Math.floor(Math.random()*4)
     switch(direction){
       case 0: {
         const newPosition = ghostPosition+1
-        blueGhostMoveDirection(ghostClass, ghostPosition, newPosition)
+        blueGhostMove(ghostClass, ghostPosition, newPosition)
         break
       }
       case 1: {
         const newPosition = ghostPosition-1
-        blueGhostMoveDirection(ghostClass, ghostPosition, newPosition)
+        blueGhostMove(ghostClass, ghostPosition, newPosition)
         break
       }
       case 2: {
         const newPosition = ghostPosition-width
-        blueGhostMoveDirection(ghostClass, ghostPosition, newPosition)
+        blueGhostMove(ghostClass, ghostPosition, newPosition)
         break
       }
       case 3: {
         const newPosition = ghostPosition+width
-        blueGhostMoveDirection(ghostClass, ghostPosition, newPosition)
+        blueGhostMove(ghostClass, ghostPosition, newPosition)
         break
       }
     }
