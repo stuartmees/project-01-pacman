@@ -19,6 +19,20 @@
   border: dodgerblue 1px solid;
 }
 
+.pac-dot{
+  background-image: url('../images/dot.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 40px;
+}
+
+.power-dot{
+  background-image: url('../images/dot.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 80px;
+}
+
 .pacman{
   background-image: url('../images/pacman.png');
   background-position: center;
@@ -47,7 +61,7 @@
   background-size: 40px;
 }
 
-.blue-ghost{
+.blue-ghost-red, .blue-ghost-yellow{
   background-image: url('../images/blueghost.png');
   background-position: center;
   background-repeat: no-repeat;
@@ -56,12 +70,4 @@
 
 .wall{
   background-color: brown;
-}
-
-.pac-dot{
-  height: 10px;
-  width: 10px;
-  background-color: yellow;
-  border-radius: 50%;
-  display: inline-block;
 }
