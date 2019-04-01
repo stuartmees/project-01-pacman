@@ -6,8 +6,6 @@ window.addEventListener('DOMContentLoaded', function(){
   let position = 11 //Set the starting position and define the position variable to store the current position of pacman
   let redGhostPosition = 44
   let yellowGhostPosition = 45
-  let blueGhostYellowPosition
-  let blueGhostRedPosition
   let score = 0 //Initialise player score variable
   let lives = 3
   let powerScore = 200
@@ -43,8 +41,19 @@ window.addEventListener('DOMContentLoaded', function(){
 
   gridBoxes[position].classList.add('pacman')//Puts Pacman wherever the the position dictates
 
-  gridBoxes[redGhostPosition].classList.add('red-ghost')//Puts redGhost wherever  redGhost position dictates
-  gridBoxes[yellowGhostPosition].classList.add('yellow-ghost')
+  function startingSetup(){
+    gridBoxes[redGhostPosition].classList.add('red')
+    gridBoxes[yellowGhostPosition].classList.add('yellow')
+    gridBoxes[redGhostPosition].classList.add('ghost')
+    gridBoxes[yellowGhostPosition].classList.add('ghost')
+    redGhostInterval = setInterval(function(){
+      ghostMove('red', redGhostPosition)
+    } , 500)
+    yellowGhostInterval = setInterval(function(){
+      ghostMove('yellow', yellowGhostPosition)
+    } , 500)
+  }
+
 
   //Sets the relvant grid boxes as part of the wall
   walls.forEach((wallIndex) => gridBoxes[wallIndex].classList.add('wall'))
@@ -60,79 +69,71 @@ window.addEventListener('DOMContentLoaded', function(){
     gridBoxes[dotIndex].classList.add('power-dot')
   })
 
-  // function eatDot(pacmanGridBox){
-  //   pacmanGridBox.classList.remove('pac-dot')
-  //   score++
-  //   scoreElem.innerText = score
-  // }
-
   function endBlueGhost(){
-    gridBoxes[blueGhostRedPosition].classList.remove('blue-ghost-red')
-    gridBoxes[blueGhostYellowPosition].classList.remove('blue-ghost-yellow')
+    gridBoxes[redGhostPosition].classList.remove('blue')
+    gridBoxes[yellowGhostPosition].classList.remove('blue')
     clearInterval(blueGhostYellowInterval)
     clearInterval(blueGhostRedInterval)
-    yellowGhostPosition = blueGhostYellowPosition
-    redGhostPosition = blueGhostRedPosition
-    blueGhostRedPosition = null
-    blueGhostYellowPosition = null
-    gridBoxes[redGhostPosition].classList.add('red-ghost')
-    gridBoxes[yellowGhostPosition].classList.add('yellow-ghost')
     powerScore = 200
-    redGhostMove()
-    redGhostInterval = setInterval(redGhostMove, 500)
-    yellowGhostMove()
-    yellowGhostInterval = setInterval(yellowGhostMove, 500)
+    startingSetup()
+    ghostMove('red', redGhostPosition)
+    redGhostInterval = setInterval(function(){
+      ghostMove('red', redGhostPosition)
+    } , 500)
+    ghostMove('yellow', yellowGhostPosition)
+    yellowGhostInterval = setInterval(function(){
+      ghostMove('yellow', yellowGhostPosition)
+    } , 500)
   }
 
   function startBlueGhost(pacmanGridBox){
-    pacmanGridBox.classList.remove('power-dot')
     clearInterval(redGhostInterval)
     clearInterval(yellowGhostInterval)
-    blueGhostYellowPosition = yellowGhostPosition
-    blueGhostRedPosition = redGhostPosition
-    gridBoxes[redGhostPosition].classList.remove('red-ghost')
-    gridBoxes[blueGhostRedPosition].classList.add('blue-ghost-red')
-    gridBoxes[yellowGhostPosition].classList.remove('yellow-ghost')
-    gridBoxes[blueGhostYellowPosition].classList.add('blue-ghost-yellow')
-    yellowGhostPosition = null
-    redGhostPosition = null
-    blueGhostYellowMove()
-    blueGhostYellowInterval = setInterval(blueGhostYellowMove, 1000)
-    blueGhostRedMove()
-    blueGhostRedInterval = setInterval(blueGhostRedMove, 1000)
+    pacmanGridBox.classList.remove('power-dot')
+    gridBoxes[redGhostPosition].classList.add('blue')
+    gridBoxes[yellowGhostPosition].classList.add('blue')
+    blueGhostMove('yellow', yellowGhostPosition)
+    blueGhostYellowInterval = setInterval(function(){
+      blueGhostMove('yellow', yellowGhostPosition)
+    }, 1000)
+    blueGhostMove('red', redGhostPosition)
+    blueGhostRedInterval = setInterval(function(){
+      blueGhostMove('red', redGhostPosition)
+    }, 1000)
     setTimeout(endBlueGhost, 10000)
   }
   //Universal function that moves Pacman in the correct direction when invoked
   function move(){
     const pacmanGridBox = gridBoxes[position]
+
     const player = gridBoxes.find(box => box.classList.contains('pacman'))
     player.classList.remove('pacman')
     pacmanGridBox.classList.add('pacman')
+
+    if ((pacmanGridBox.classList.contains('ghost')) && (!pacmanGridBox.classList.contains('blue'))) ghostReset()
+
     if (pacmanGridBox.classList.contains('pac-dot')){
       pacmanGridBox.classList.remove('pac-dot')
       score++
       scoreElem.innerText = score
     }
+
     if (pacmanGridBox.classList.contains('power-dot')) startBlueGhost(pacmanGridBox)
-    if ((pacmanGridBox.classList.contains('blue-ghost-yellow')) || (pacmanGridBox.classList.contains('blue-ghost-red'))){
+
+    if ((pacmanGridBox.classList.contains('blue'))){
       score = score + powerScore
       powerScore = powerScore*2
       scoreElem.innerText = score
-      if (pacmanGridBox.classList.contains('blue-ghost-yellow')){
+      if (pacmanGridBox.classList.contains('yellow')){
         clearInterval(blueGhostYellowInterval)
-        const blueGhostYellow = gridBoxes.find(box => box.classList.contains('blue-ghost-yellow'))
-        blueGhostYellow.classList.remove('blue-ghost-yellow')
-        blueGhostYellowPosition = 45
+        pacmanGridBox.classList.remove('blue','yellow','ghost')
+        yellowGhostPosition = 45
       }
-      if (pacmanGridBox.classList.contains('blue-ghost-red')){
+      if (pacmanGridBox.classList.contains('red')){
         clearInterval(blueGhostRedInterval)
-        const blueGhostRed = gridBoxes.find(box => box.classList.contains('blue-ghost-red'))
-        blueGhostRed.classList.remove('blue-ghost-red')
-        blueGhostRedPosition = 44
+        pacmanGridBox.classList.remove('blue','red','ghost')
+        redGhostPosition = 44
       }
-    }
-    if ((!!redGhostPosition && !!yellowGhostPosition) && ((gridBoxes[redGhostPosition].classList.contains('pacman') || gridBoxes[yellowGhostPosition].classList.contains('pacman')))) {
-      ghostReset()
     }
   }
 
@@ -141,7 +142,6 @@ window.addEventListener('DOMContentLoaded', function(){
     let newPosition = position+1
     newPosition = (newPosition % width === 0) ? (newPosition - width):newPosition
     if(gridBoxes[newPosition].classList.contains('wall')){
-      // clearInterval(interval)
       return
     } else {
       position = newPosition
@@ -154,7 +154,6 @@ window.addEventListener('DOMContentLoaded', function(){
     let newPosition = position-1
     newPosition = ((newPosition+1) % width === 0) ? (newPosition + width):(newPosition)
     if(gridBoxes[newPosition].classList.contains('wall')){
-      // clearInterval(interval)
       return
     } else {
       position = newPosition
@@ -168,7 +167,6 @@ window.addEventListener('DOMContentLoaded', function(){
       newPosition = newPosition + (numberOfBoxes-width)
     }
     if(gridBoxes[newPosition].classList.contains('wall')){
-      // clearInterval(interval)
       return
     } else {
       position = newPosition
@@ -182,7 +180,6 @@ window.addEventListener('DOMContentLoaded', function(){
       newPosition = newPosition-(numberOfBoxes-width)
     }
     if(gridBoxes[newPosition].classList.contains('wall')){
-      // clearInterval(interval)
       return
     } else {
       position = newPosition
@@ -194,24 +191,32 @@ window.addEventListener('DOMContentLoaded', function(){
     livesElem.innerText = lives
     scoreElem.innerText = score
     position = 11
-    redGhostPosition = 65
-    yellowGhostPosition = 66
+    redGhostPosition = 44
+    yellowGhostPosition = 45
     gridBoxes[position].classList.add('pacman')
-    gridBoxes[redGhostPosition].classList.add('red-ghost')
-    gridBoxes[yellowGhostPosition].classList.add('yellow-ghost')
+    gridBoxes[redGhostPosition].classList.add('red')
+    gridBoxes[yellowGhostPosition].classList.add('yellow')
+    gridBoxes[redGhostPosition].classList.add('ghost')
+    gridBoxes[yellowGhostPosition].classList.add('ghost')
     pacDots.forEach(function(pacDotIndex){
       if (!gridBoxes[pacDotIndex].classList.contains('pac-dot')) gridBoxes[pacDotIndex].classList.add('pac-dot')
     })
-    redGhostInterval = setInterval(redGhostMove, 1000)
-    yellowGhostInterval = setInterval(yellowGhostMove, 1000)
+    redGhostInterval = setInterval(function(){
+      ghostMove('red', redGhostPosition)
+    } , 500)
+    yellowGhostInterval = setInterval(function(){
+      ghostMove('yellow', yellowGhostPosition)
+    } , 500)
   }
 
   function ghostReset(){
     clearInterval(redGhostInterval)
     clearInterval(yellowGhostInterval)
     gridBoxes[position].classList.remove('pacman')
-    gridBoxes[redGhostPosition].classList.remove('red-ghost')
-    gridBoxes[yellowGhostPosition].classList.remove('yellow-ghost')
+    gridBoxes[redGhostPosition].classList.remove('red')
+    gridBoxes[yellowGhostPosition].classList.remove('yellow')
+    gridBoxes[redGhostPosition].classList.remove('ghost')
+    gridBoxes[yellowGhostPosition].classList.remove('ghost')
     lives--
     score = 0
     if (lives>0){
@@ -221,277 +226,100 @@ window.addEventListener('DOMContentLoaded', function(){
     }
   }
 
-
-
-  function redGhostMoveRight(){
-    const newPosition = redGhostPosition+1
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('yellow-ghost'))){
-      gridBoxes[redGhostPosition].classList.remove('red-ghost')
-      redGhostPosition++
-      gridBoxes[redGhostPosition].classList.add('red-ghost')
-      if (gridBoxes[redGhostPosition].classList.contains('pacman')){
+  function ghostMoveDirection(ghostClass, ghostPosition, newPosition){
+    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('ghost'))){
+      gridBoxes[ghostPosition].classList.remove(ghostClass, 'ghost')
+      ghostPosition = newPosition
+      gridBoxes[ghostPosition].classList.add(ghostClass, 'ghost')
+      if (gridBoxes[ghostPosition].classList.contains('pacman')){
         ghostReset()
       }
+      if (ghostClass === 'red') return redGhostPosition = ghostPosition
+      if (ghostClass === 'yellow') return yellowGhostPosition = ghostPosition
     }
   }
 
-  function redGhostMoveLeft(){
-    const newPosition = redGhostPosition -1
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('yellow-ghost'))){
-      gridBoxes[redGhostPosition].classList.remove('red-ghost')
-      redGhostPosition--
-      gridBoxes[redGhostPosition].classList.add('red-ghost')
-      if (gridBoxes[redGhostPosition].classList.contains('pacman')){
-        ghostReset()
-      }
-    }
-  }
-
-  function redGhostMoveUp(){
-    const newPosition  = redGhostPosition-width
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('yellow-ghost'))){
-      gridBoxes[redGhostPosition].classList.remove('red-ghost')
-      redGhostPosition = redGhostPosition - width
-      gridBoxes[redGhostPosition].classList.add('red-ghost')
-      if (gridBoxes[redGhostPosition].classList.contains('pacman')){
-        ghostReset()
-      }
-    }
-  }
-
-  function redGhostMoveDown(){
-    const newPosition = redGhostPosition+width
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('yellow-ghost'))){
-      gridBoxes[redGhostPosition].classList.remove('red-ghost')
-      redGhostPosition = redGhostPosition + width
-      gridBoxes[redGhostPosition].classList.add('red-ghost')
-      if (gridBoxes[redGhostPosition].classList.contains('pacman')){
-        ghostReset()
-      }
-    }
-  }
-
-  function redGhostMove(){
-    const xDist = (position%width)-(redGhostPosition%width)
-    const yDist = Math.floor(redGhostPosition/width)-Math.floor(position/width)
-    let direction
-
-    if (xDist>0 && yDist>0){
-      direction = (xDist>yDist) ? 0 : 2
-    }
-
-    if (xDist<0 && yDist<0){
-      direction = (xDist<yDist) ? 2 : 3
-    }
-
-    if (xDist>0 && yDist<0){
-      direction = (xDist>Math.abs(yDist)) ? 0 : 3
-    }
-
-    if (xDist<0 && yDist>0){
-      direction = (Math.abs(xDist)>yDist) ? 1 : 2
-    }
-
-    switch(direction){
-      case 0: redGhostMoveRight()
-        break
-      case 1: redGhostMoveLeft()
-        break
-      case 2: redGhostMoveUp()
-        break
-      case 3: redGhostMoveDown()
-        break
-    }
-  }
-
-  function yellowGhostMoveRight(){
-    const newPosition = yellowGhostPosition+1
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('red-ghost'))){
-      gridBoxes[yellowGhostPosition].classList.remove('yellow-ghost')
-      yellowGhostPosition++
-      gridBoxes[yellowGhostPosition].classList.add('yellow-ghost')
-      if (gridBoxes[yellowGhostPosition].classList.contains('pacman')){
-        ghostReset()
-      }
-    }
-  }
-
-  function yellowGhostMoveLeft(){
-    const newPosition = yellowGhostPosition-1
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('red-ghost'))){
-      gridBoxes[yellowGhostPosition].classList.remove('yellow-ghost')
-      yellowGhostPosition--
-      gridBoxes[yellowGhostPosition].classList.add('yellow-ghost')
-      if (gridBoxes[yellowGhostPosition].classList.contains('pacman')){
-        ghostReset()
-      }
-    }
-  }
-
-  function yellowGhostMoveUp(){
-    const newPosition  = yellowGhostPosition-width
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('red-ghost'))){
-      gridBoxes[yellowGhostPosition].classList.remove('yellow-ghost')
-      yellowGhostPosition = yellowGhostPosition - width
-      gridBoxes[yellowGhostPosition].classList.add('yellow-ghost')
-      if (gridBoxes[yellowGhostPosition].classList.contains('pacman')){
-        ghostReset()
-      }
-    }
-  }
-
-  function yellowGhostMoveDown(){
-    const newPosition = yellowGhostPosition+width
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('red-ghost'))){
-      gridBoxes[yellowGhostPosition].classList.remove('yellow-ghost')
-      yellowGhostPosition = yellowGhostPosition + width
-      gridBoxes[yellowGhostPosition].classList.add('yellow-ghost')
-      if (gridBoxes[yellowGhostPosition].classList.contains('pacman')){
-        ghostReset()
-      }
-    }
-  }
-
-  function yellowGhostMove(){
+  function ghostMove(ghostClass, ghostPosition){
     const direction = Math.floor(Math.random()*4)
     switch(direction){
-      case 0: yellowGhostMoveRight()
+      case 0: {
+        const newPosition = ghostPosition +1
+        ghostMoveDirection(ghostClass, ghostPosition, newPosition)
         break
-      case 1: yellowGhostMoveLeft()
+      }
+      case 1: {
+        const newPosition = ghostPosition- 1
+        ghostMoveDirection(ghostClass, ghostPosition, newPosition)
         break
-      case 2: yellowGhostMoveUp()
+      }
+      case 2: {
+        const newPosition = ghostPosition - width
+        ghostMoveDirection(ghostClass, ghostPosition, newPosition)
         break
-      case 3: yellowGhostMoveDown()
+      }
+      case 3: {
+        const newPosition = ghostPosition+width
+        ghostMoveDirection(ghostClass, ghostPosition, newPosition)
         break
+      }
     }
   }
 
-  function blueGhostYellowMoveRight(){
-    const newPosition = blueGhostYellowPosition+1
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('blue-ghost-yellow'))){
-      gridBoxes[blueGhostYellowPosition].classList.remove('blue-ghost-yellow')
-      blueGhostYellowPosition++
-      gridBoxes[blueGhostYellowPosition].classList.add('blue-ghost-yellow')
+  function blueGhostMoveDirection(ghostClass, ghostPosition, newPosition){
+    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('ghost'))){
+      gridBoxes[ghostPosition].classList.remove('ghost', 'blue')
+      gridBoxes[ghostPosition].classList.remove(ghostClass)
+      ghostPosition = newPosition
+      gridBoxes[ghostPosition].classList.add('ghost', 'blue')
+      gridBoxes[ghostPosition].classList.add(ghostClass)
+      if (ghostClass==='red') return redGhostPosition = ghostPosition
+      if (ghostClass ==='yellow') return yellowGhostPosition = ghostPosition
     }
   }
 
-  function blueGhostYellowMoveLeft(){
-    const newPosition = blueGhostYellowPosition-1
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('blue-ghost-yellow'))){
-      gridBoxes[blueGhostYellowPosition].classList.remove('blue-ghost-yellow')
-      blueGhostYellowPosition--
-      gridBoxes[blueGhostYellowPosition].classList.add('blue-ghost-yellow')
-    }
-  }
-
-  function blueGhostYellowMoveUp(){
-    const newPosition  = blueGhostYellowPosition-width
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('blue-ghost-yellow'))){
-      gridBoxes[blueGhostYellowPosition].classList.remove('blue-ghost-yellow')
-      blueGhostYellowPosition = blueGhostYellowPosition - width
-      gridBoxes[blueGhostYellowPosition].classList.add('blue-ghost-yellow')
-    }
-  }
-
-  function blueGhostYellowMoveDown(){
-    const newPosition = blueGhostYellowPosition+width
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('blue-ghost-yellow'))){
-      gridBoxes[blueGhostYellowPosition].classList.remove('blue-ghost-yellow')
-      blueGhostYellowPosition = blueGhostYellowPosition + width
-      gridBoxes[blueGhostYellowPosition].classList.add('blue-ghost-yellow')
-    }
-  }
-
-  function blueGhostYellowMove(){
+  function blueGhostMove(ghostClass, ghostPosition){
     const direction = Math.floor(Math.random()*4)
     switch(direction){
-      case 0: blueGhostYellowMoveRight()
+      case 0: {
+        const newPosition = ghostPosition+1
+        blueGhostMoveDirection(ghostClass, ghostPosition, newPosition)
         break
-      case 1: blueGhostYellowMoveLeft()
+      }
+      case 1: {
+        const newPosition = ghostPosition-1
+        blueGhostMoveDirection(ghostClass, ghostPosition, newPosition)
         break
-      case 2: blueGhostYellowMoveUp()
+      }
+      case 2: {
+        const newPosition = ghostPosition-width
+        blueGhostMoveDirection(ghostClass, ghostPosition, newPosition)
         break
-      case 3: blueGhostYellowMoveDown()
+      }
+      case 3: {
+        const newPosition = ghostPosition+width
+        blueGhostMoveDirection(ghostClass, ghostPosition, newPosition)
         break
+      }
     }
   }
 
-  function blueGhostRedMoveRight(){
-    const newPosition = blueGhostRedPosition+1
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('blue-ghost-red'))){
-      gridBoxes[blueGhostRedPosition].classList.remove('blue-ghost-red')
-      blueGhostRedPosition++
-      gridBoxes[blueGhostRedPosition].classList.add('blue-ghost-red')
-    }
-  }
-
-  function blueGhostRedMoveLeft(){
-    const newPosition = blueGhostRedPosition -1
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('blue-ghost-red'))){
-      gridBoxes[blueGhostRedPosition].classList.remove('blue-ghost-red')
-      blueGhostRedPosition--
-      gridBoxes[blueGhostRedPosition].classList.add('blue-ghost-red')
-    }
-  }
-
-  function blueGhostRedMoveUp(){
-    const newPosition  = blueGhostRedPosition-width
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('blue-ghost-red'))){
-      gridBoxes[blueGhostRedPosition].classList.remove('blue-ghost-red')
-      blueGhostRedPosition = blueGhostRedPosition - width
-      gridBoxes[blueGhostRedPosition].classList.add('blue-ghost-red')
-    }
-  }
-
-  function blueGhostRedMoveDown(){
-    const newPosition = blueGhostRedPosition+width
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('blue-ghost-red'))){
-      gridBoxes[blueGhostRedPosition].classList.remove('blue-ghost-red')
-      blueGhostRedPosition = blueGhostRedPosition + width
-      gridBoxes[blueGhostRedPosition].classList.add('blue-ghost-red')
-    }
-  }
-
-  function blueGhostRedMove(){
-    const direction = Math.floor(Math.random()*4)
-    switch(direction){
-      case 0: blueGhostRedMoveRight()
-        break
-      case 1: blueGhostRedMoveLeft()
-        break
-      case 2: blueGhostRedMoveUp()
-        break
-      case 3: blueGhostRedMoveDown()
-        break
-    }
-  }
-
-  redGhostInterval = setInterval(redGhostMove, 500)
-  yellowGhostInterval = setInterval(yellowGhostMove, 500)
+  startingSetup()
 
   //Invoke the relevant move funtion depending on which arrow key is pressed.
   document.addEventListener('keydown', function(e){
     keyCode = e.keyCode
     switch(keyCode){
       case 39:
-        // clearInterval(interval)
         moveRight()
-        // interval = setInterval(moveRight, 200)
         break
       case 37:
-        // clearInterval(interval)
         moveLeft()
-        // interval = setInterval(moveLeft, 200)
         break
       case 40:
-        // clearInterval(interval)
         moveDown()
-        // interval = setInterval(moveDown, 200)
         break
       case 38:
-        // clearInterval(interval)
         moveUp()
-        // interval = setInterval(moveUp, 200)
         break
     }
   })

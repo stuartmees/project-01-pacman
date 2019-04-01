@@ -40,28 +40,32 @@
   background-size: 30px;
 }
 
-.red-ghost{
+.ghost{
+
+}
+
+.red{
   background-image: url('../images/redghost.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 40px;
 }
 
-.yellow-ghost{
+.yellow{
   background-image: url('../images/yellowghost.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 40px;
 }
 
-.pink-ghost{
+.pink{
   background-image: url('../images/pinkghost.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 40px;
 }
 
-.blue-ghost-red, .blue-ghost-yellow{
+.blue{
   background-image: url('../images/blueghost.png');
   background-position: center;
   background-repeat: no-repeat;
