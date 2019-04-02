@@ -216,10 +216,12 @@ window.addEventListener('DOMContentLoaded', function(){
     clearInterval(redGhostInterval)
     clearInterval(yellowGhostInterval)
     gridBoxes[position].classList.remove('pacman')
-    gridBoxes[redGhostPosition].classList.remove('red')
-    gridBoxes[yellowGhostPosition].classList.remove('yellow')
-    gridBoxes[redGhostPosition].classList.remove('ghost')
-    gridBoxes[yellowGhostPosition].classList.remove('ghost')
+    const redGhost = gridBoxes.find(box => box.classList.contains('red'))
+    redGhost.classList.remove('red', 'ghost')
+    redGhost.removeAttribute('data-direction')
+    const yellowGhost = gridBoxes.find(box => box.classList.contains('yellow'))
+    yellowGhost.classList.remove('yellow', 'ghost')
+    yellowGhost.removeAttribute('data-direction')
     lives--
     score = 0
     if (lives>0){
@@ -262,6 +264,11 @@ window.addEventListener('DOMContentLoaded', function(){
     const xDist = (position%width)-(ghostPosition%width)
     const yDist = Math.floor(ghostPosition/width)-Math.floor(position/width)
     let direction
+    let newPosition
+
+    // if ((xDist>0) && (yDist>0)){
+    //   newPosition = (xDist>yDist) ? ghostPosition+1 : ghostPosition-width
+    // }
 
     if ((xDist>0) && (yDist>0)){
       direction = (xDist>yDist) ? 0 : 2
