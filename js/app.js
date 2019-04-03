@@ -143,7 +143,7 @@ window.addEventListener('DOMContentLoaded', function(){
       return
     } else {
       position = newPosition
-      pacmanDirection = 'forward'
+      pacmanDirection = 1
       move()
     }
   }
@@ -156,7 +156,7 @@ window.addEventListener('DOMContentLoaded', function(){
       return
     } else {
       position = newPosition
-      pacmanDirection = 'backward'
+      pacmanDirection = 3
       move()
     }
   }
@@ -170,7 +170,7 @@ window.addEventListener('DOMContentLoaded', function(){
       return
     } else {
       position = newPosition
-      pacmanDirection = 'up'
+      pacmanDirection = 4
       move()
     }
   }
@@ -184,7 +184,7 @@ window.addEventListener('DOMContentLoaded', function(){
       return
     } else {
       position = newPosition
-      pacmanDirection = 'down'
+      pacmanDirection = 2
       move()
     }
   }
@@ -291,19 +291,19 @@ window.addEventListener('DOMContentLoaded', function(){
 
       if (Math.abs(xDist)>(Math.abs(yDist))){
         options = [-width,+1, -1, +width]
-        directions = ['forward', 'up', 'down', 'backward']
+        directions = [1, 4, 2, 3]
         moveChooser()
       }
 
       if (Math.abs(xDist)<(Math.abs(yDist))){
         options = [+width,-1, +1, -width]
-        directions = ['down', 'backward', 'forward', 'up']
+        directions = [2, 3, 1, 4]
         moveChooser()
       }
 
       if (Math.abs(xDist) === Math.abs(yDist)){
         options = [-width, +1, +width, -1]
-        directions = ['up', 'forward', 'down', 'backward']
+        directions = [4, 1, 2, 3]
 
         if (xDist>0){
           moveIncrement()
@@ -318,19 +318,19 @@ window.addEventListener('DOMContentLoaded', function(){
 
       if (Math.abs(xDist)>(Math.abs(yDist))){
         options = [+1, +width, -width, -1]
-        directions = ['forward', 'down', 'up', 'backward']
+        directions = [1, 2, 4, '3]
         moveChooser()
       }
 
       if (Math.abs(xDist)<(Math.abs(yDist))){
         options = [+width,+1, -1, -width]
-        directions = ['down', 'forward', 'backward', 'up']
+        directions = [2, 1, 3, 4]
         moveChooser()
       }
 
       if (Math.abs(xDist)===Math.abs(yDist)){
         options = [-width, +1, +width, -1]
-        directions = ['forward', 'down', 'up', 'backward']
+        directions = [1, 2, 4, 3]
 
         if (xDist>0){
           moveIncrement()
@@ -342,7 +342,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
     if (yDist===0){
       options = [+1, -width, +width, -1]
-      directions = ['forward', 'up', 'down', 'backward']
+      directions = [1, 4, 2, 3]
 
       if (xDist>0){
         moveIncrement()
@@ -353,7 +353,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
     if (xDist===0){
       options = [-width,-1, +1, +width]
-      directions = ['up', 'backward', 'forward', 'down']
+      directions = [4, 3, 1, 2]
 
       if (yDist>0){
         moveIncrement()
