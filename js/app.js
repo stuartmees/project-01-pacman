@@ -106,7 +106,7 @@ window.addEventListener('DOMContentLoaded', function(){
     pacmanGridBox.classList.add('pacman')
 
 
-    pacmanGridBox.setAttribute('data-direction', pacmanDirection)
+    pacmanGridBox.setAttribute('data-direction', pacmanDirection.toString())
 
     if ((pacmanGridBox.classList.contains('ghost')) && (!pacmanGridBox.classList.contains('blue'))) deathClear()
 
@@ -235,7 +235,7 @@ window.addEventListener('DOMContentLoaded', function(){
     gridBoxes[ghostPosition].removeAttribute('data-direction')
     ghostPosition = newPosition
     gridBoxes[ghostPosition].classList.add(ghostClass, 'ghost')
-    gridBoxes[ghostPosition].setAttribute('data-direction', ghostDirection)
+    gridBoxes[ghostPosition].setAttribute('data-direction', ghostDirection.toString())
 
     if (gridBoxes[ghostPosition].classList.contains('pacman')){
       deathClear()
@@ -290,7 +290,7 @@ window.addEventListener('DOMContentLoaded', function(){
     if ((Math.abs(xDist)>0) && (Math.abs(yDist)>0)){
 
       if (Math.abs(xDist)>(Math.abs(yDist))){
-        options = [-width,+1, -1, +width]
+        options = [+1,-width, +width, -1]
         directions = [1, 4, 2, 3]
         moveChooser()
       }
@@ -318,7 +318,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
       if (Math.abs(xDist)>(Math.abs(yDist))){
         options = [+1, +width, -width, -1]
-        directions = [1, 2, 4, '3]
+        directions = [1, 2, 4, 4]
         moveChooser()
       }
 
