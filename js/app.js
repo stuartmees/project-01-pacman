@@ -5,6 +5,7 @@ window.addEventListener('DOMContentLoaded', function(){
   const width = 10 //Set the width of the game grid
   let position = 11 //Set the starting position and define the position variable to store the current position of pacman
   let ghostDirection
+  let newGhostDirection
   let pacmanDirection
   let redGhostPosition = 44
   let yellowGhostPosition = 45
@@ -235,7 +236,7 @@ window.addEventListener('DOMContentLoaded', function(){
     gridBoxes[ghostPosition].removeAttribute('data-direction')
     ghostPosition = newPosition
     gridBoxes[ghostPosition].classList.add(ghostClass, 'ghost')
-    gridBoxes[ghostPosition].setAttribute('data-direction', ghostDirection.toString())
+    gridBoxes[ghostPosition].setAttribute('data-direction', newGhostDirection.toString())
 
     if (gridBoxes[ghostPosition].classList.contains('pacman')){
       deathClear()
@@ -249,6 +250,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
     const xDist = (position%width)-(ghostPosition%width)
     const yDist = Math.floor(ghostPosition/width)-Math.floor(position/width)
+    ghostDirection = parseInt(gridBoxes[ghostPosition].getAttribute('data-direction'))
     let directions = []
     let options = []
 
@@ -259,22 +261,22 @@ window.addEventListener('DOMContentLoaded', function(){
     const moveIncrement = function(){
       let currentOptIndex = 0
       newPosition = ghostPosition + options[currentOptIndex]
-      ghostDirection = directions[currentOptIndex]
+      newGhostDirection = directions[currentOptIndex]
       while(!canMove()) {
         currentOptIndex++
         newPosition = ghostPosition + options[currentOptIndex]
-        ghostDirection = directions[currentOptIndex]
+        newGhostDirection = directions[currentOptIndex]
       }
     }
 
     const moveIncrementReverse = function(){
       let currentOptIndex = 3
       newPosition = ghostPosition + options[currentOptIndex]
-      ghostDirection = directions[currentOptIndex]
+      newGhostDirection = directions[currentOptIndex]
       while(!canMove()) {
         currentOptIndex--
         newPosition = ghostPosition + options[currentOptIndex]
-        ghostDirection = directions[currentOptIndex]
+        newGhostDirection = directions[currentOptIndex]
       }
     }
 
