@@ -40,19 +40,19 @@
   background-size: 30px;
 }
 
-.pacman[data-direction="forward"] {
+.pacman[data-direction=2] {
   transform: scaleX(1);
 }
 
-.pacman[data-direction="backward"] {
+.pacman[data-direction=4] {
   transform: scaleX(-1);
 }
 
-.pacman[data-direction="up"] {
+.pacman[data-direction=1] {
   transform: rotate(-90deg);
 }
 
-.pacman[data-direction="down"] {
+.pacman[data-direction=3] {
   transform: rotate(90deg);
 }
 
@@ -60,11 +60,11 @@
 
 }
 
-.ghost[data-direction="forward"] {
+.ghost[data-direction=2] {
   transform: scaleX(1);
 }
 
-.ghost[data-direction="backward"] {
+.ghost[data-direction=4] {
   transform: scaleX(-1);
 }
 

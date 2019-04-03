@@ -5,10 +5,10 @@ window.addEventListener('DOMContentLoaded', function(){
   const width = 10 //Set the width of the game grid
   let position = 11 //Set the starting position and define the position variable to store the current position of pacman
   let ghostDirection
-  let newPosition
   let pacmanDirection
   let redGhostPosition = 44
   let yellowGhostPosition = 45
+  let newPosition = 0
   let score = 0 //Initialise player score variable
   let lives = 3
   let powerScore = 200
@@ -100,7 +100,6 @@ window.addEventListener('DOMContentLoaded', function(){
   //Universal function that moves Pacman in the correct direction when invoked
   function move(){
     const pacmanGridBox = gridBoxes[position]
-
     const player = gridBoxes.find(box => box.classList.contains('pacman'))
     player.classList.remove('pacman')
     player.removeAttribute('data-direction')
@@ -232,91 +231,141 @@ window.addEventListener('DOMContentLoaded', function(){
   }
 
   function ghostMove(ghostClass, ghostPosition, newPosition){
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('ghost'))){
-      gridBoxes[ghostPosition].classList.remove(ghostClass, 'ghost')
-      gridBoxes[ghostPosition].removeAttribute('data-direction')
-      ghostPosition = newPosition
-      gridBoxes[ghostPosition].classList.add(ghostClass, 'ghost')
-      gridBoxes[ghostPosition].setAttribute('data-direction', ghostDirection)
-      if (gridBoxes[ghostPosition].classList.contains('pacman')){
-        deathClear()
-      }
-      if (ghostClass === 'red') return redGhostPosition = ghostPosition
-      if (ghostClass === 'yellow') return yellowGhostPosition = ghostPosition
-    } else {
-      if (ghostClass==='red'){
-        clearInterval(redGhostInterval)
-        redGhostInterval = setInterval(function(){
-          ghostInitiate('red', redGhostPosition)
-        } , 500)
-      }
-      if (ghostClass === 'yellow'){
-        clearInterval(yellowGhostInterval)
-        yellowGhostInterval = setInterval(function(){
-          ghostInitiate('yellow', yellowGhostPosition)
-        } , 500)
-      }
+    gridBoxes[ghostPosition].classList.remove(ghostClass, 'ghost')
+    gridBoxes[ghostPosition].removeAttribute('data-direction')
+    ghostPosition = newPosition
+    gridBoxes[ghostPosition].classList.add(ghostClass, 'ghost')
+    gridBoxes[ghostPosition].setAttribute('data-direction', ghostDirection)
+
+    if (gridBoxes[ghostPosition].classList.contains('pacman')){
+      deathClear()
     }
+    if (ghostClass === 'red') return redGhostPosition = ghostPosition
+    if (ghostClass === 'yellow') return yellowGhostPosition = ghostPosition
   }
+
 
   function ghostInitiate(ghostClass, ghostPosition){
 
     const xDist = (position%width)-(ghostPosition%width)
     const yDist = Math.floor(ghostPosition/width)-Math.floor(position/width)
-    let direction
-    let newPosition
+    let directions = []
+    let options = []
 
-    // if ((xDist>0) && (yDist>0)){
-    //   newPosition = (xDist>yDist) ? ghostPosition+1 : ghostPosition-width
-    // }
-
-    if ((xDist>0) && (yDist>0)){
-      direction = (xDist>yDist) ? 0 : 2
+    const canMove = function() {
+      return ((!gridBoxes[newPosition].classList.contains('wall')) &&  (!gridBoxes[newPosition].classList.contains('ghost')))
     }
 
-    if ((xDist<0) && (yDist<0)) {
-      direction = (Math.abs(xDist)>Math.abs(yDist)) ? 1 : 3
-    }
-
-    if ((xDist>0) && (yDist<0)){
-      direction = ((xDist)>Math.abs(yDist)) ? 0 : 3
-    }
-
-    if ((xDist<0) && (yDist>0)){
-      direction = ((Math.abs(xDist))>yDist) ? 1 : 2
-    }
-
-    if (xDist===0) direction = (yDist>0) ? 2 : 3
-
-    if (yDist===0) direction = (xDist>0) ? 0 : 1
-
-    switch(direction){
-      case 0: {
-        newPosition = ghostPosition + 1
-        ghostDirection = 'forward'
-        ghostMove(ghostClass, ghostPosition, newPosition)
-        break
-      }
-      case 1: {
-        newPosition = ghostPosition - 1
-        ghostDirection = 'backward'
-        ghostMove(ghostClass, ghostPosition, newPosition)
-        break
-      }
-      case 2: {
-        newPosition = ghostPosition - width
-        ghostDirection = 'up'
-        ghostMove(ghostClass, ghostPosition, newPosition)
-        break
-      }
-      case 3: {
-        newPosition = ghostPosition + width
-        ghostDirection = 'down'
-        ghostMove(ghostClass, ghostPosition, newPosition)
-        break
+    const moveIncrement = function(){
+      let currentOptIndex = 0
+      newPosition = ghostPosition + options[currentOptIndex]
+      ghostDirection = directions[currentOptIndex]
+      while(!canMove()) {
+        currentOptIndex++
+        newPosition = ghostPosition + options[currentOptIndex]
+        ghostDirection = directions[currentOptIndex]
       }
     }
+
+    const moveIncrementReverse = function(){
+      let currentOptIndex = 3
+      newPosition = ghostPosition + options[currentOptIndex]
+      ghostDirection = directions[currentOptIndex]
+      while(!canMove()) {
+        currentOptIndex--
+        newPosition = ghostPosition + options[currentOptIndex]
+        ghostDirection = directions[currentOptIndex]
+      }
+    }
+
+    const moveChooser = function(){
+      if (xDist>yDist) {
+        moveIncrement()
+      } else {
+        moveIncrementReverse()
+      }
+    }
+
+
+    if ((Math.abs(xDist)>0) && (Math.abs(yDist)>0)){
+
+      if (Math.abs(xDist)>(Math.abs(yDist))){
+        options = [-width,+1, -1, +width]
+        directions = ['forward', 'up', 'down', 'backward']
+        moveChooser()
+      }
+
+      if (Math.abs(xDist)<(Math.abs(yDist))){
+        options = [+width,-1, +1, -width]
+        directions = ['down', 'backward', 'forward', 'up']
+        moveChooser()
+      }
+
+      if (Math.abs(xDist) === Math.abs(yDist)){
+        options = [-width, +1, +width, -1]
+        directions = ['up', 'forward', 'down', 'backward']
+
+        if (xDist>0){
+          moveIncrement()
+        } else {
+          moveIncrementReverse()
+        }
+      }
+    }
+
+
+    if ((xDist>0 && yDist<0) || (xDist<0 && yDist>0)){
+
+      if (Math.abs(xDist)>(Math.abs(yDist))){
+        options = [+1, +width, -width, -1]
+        directions = ['forward', 'down', 'up', 'backward']
+        moveChooser()
+      }
+
+      if (Math.abs(xDist)<(Math.abs(yDist))){
+        options = [+width,+1, -1, -width]
+        directions = ['down', 'forward', 'backward', 'up']
+        moveChooser()
+      }
+
+      if (Math.abs(xDist)===Math.abs(yDist)){
+        options = [-width, +1, +width, -1]
+        directions = ['forward', 'down', 'up', 'backward']
+
+        if (xDist>0){
+          moveIncrement()
+        } else {
+          moveIncrementReverse()
+        }
+      }
+    }
+
+    if (yDist===0){
+      options = [+1, -width, +width, -1]
+      directions = ['forward', 'up', 'down', 'backward']
+
+      if (xDist>0){
+        moveIncrement()
+      } else {
+        moveIncrementReverse()
+      }
+    }
+
+    if (xDist===0){
+      options = [-width,-1, +1, +width]
+      directions = ['up', 'backward', 'forward', 'down']
+
+      if (yDist>0){
+        moveIncrement()
+      } else {
+        moveIncrementReverse()
+      }
+    }
+
+    ghostMove(ghostClass, ghostPosition, newPosition)
   }
+
+
 
   function blueGhostMove(ghostClass, ghostPosition, newPosition){
     if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('ghost'))){
@@ -376,6 +425,4 @@ window.addEventListener('DOMContentLoaded', function(){
         break
     }
   })
-
-
 })
