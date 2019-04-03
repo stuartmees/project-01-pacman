@@ -3,7 +3,7 @@ window.addEventListener('DOMContentLoaded', function(){
   console.log('JS Loaded')
 
   const width = 10 //Set the width of the game grid
-  let position = 11 //Set the starting position and define the position variable to store the current position of pacman
+  let position = 64 //Set the starting position and define the position variable to store the current position of pacman
   let ghostDirection
   let newGhostDirection
   let pacmanDirection
@@ -18,7 +18,7 @@ window.addEventListener('DOMContentLoaded', function(){
   // let interval //Initialise the  variable to store the setInterval method
   // let newPosition //Initialise the newPOsition variable. This allows new position to be checked for validity beofre setting as position
   const numberOfBoxes = width*width
-
+  let isBlueGhostPhase = false
   let redGhostInterval
   let yellowGhostInterval
   let blueGhostYellowInterval
@@ -27,11 +27,11 @@ window.addEventListener('DOMContentLoaded', function(){
   const scoreElem = document.querySelector('#score')// Get the score element
   const livesElem  = document.querySelector('#lives')// Get the lives element
 
-  const walls = [0,1,2,3,4,5,6,7,8,9,10,19,20,29,40,43,46,49,50,53,54,55,56,59,60,69,70,79,80,89,90,91,92,93,94,95,96,97,98,99] //Store which grid boxes are wall
+  const walls = [0,1,2,3,4,5,6,7,8,9,10,19,20,22,23,24,25,26,27,29,40,43,46,49,50,53,54,55,56,59,60,69,70,72,73,76,77,79,80,89,90,91,92,93,94,95,96,97,98,99] //Store which grid boxes are wall
 
-  const pacDots = [12,13,14,24] //Store where the Pacdot are positioned
+  // const pacDots = [] //Store where the Pacdot are positioned
 
-  const powerDots = [88]
+  const powerDots = [11,18,81,88]
 
 
   //Creates the grid boxes and adds them to the game grid
@@ -44,6 +44,16 @@ window.addEventListener('DOMContentLoaded', function(){
   }
 
   gridBoxes[position].classList.add('pacman')//Puts Pacman wherever the the position dictates
+  //Sets the relvant grid boxes as part of the wall
+  walls.forEach((wallIndex) => gridBoxes[wallIndex].classList.add('wall'))
+
+  //not done in setup() as it is to be used on endBLueGhost
+  powerDots.forEach(function(dotIndex){
+    gridBoxes[dotIndex].classList.add('power-dot')
+  })
+
+  //not done in setup() as it is to be used on endBLueGhost
+  livesElem.innerText = lives
 
   function setup(){
     gridBoxes[redGhostPosition].classList.add('red')
@@ -58,33 +68,27 @@ window.addEventListener('DOMContentLoaded', function(){
     } , 500)
   }
 
+  setup()
 
-  //Sets the relvant grid boxes as part of the wall
-  walls.forEach((wallIndex) => gridBoxes[wallIndex].classList.add('wall'))
-
-  livesElem.innerText = lives
-
-  //Makes a pac dot element
-  pacDots.forEach(function(dotIndex){
-    gridBoxes[dotIndex].classList.add('pac-dot')
+  //not done in setup() as it is to be used on endBLueGhost
+  gridBoxes.forEach(function(box){
+    if (box.classList.length===1) box.classList.add('pac-dot')
   })
 
-  powerDots.forEach(function(dotIndex){
-    gridBoxes[dotIndex].classList.add('power-dot')
-  })
-
-  function endBlueGhost(){
+  function endBlueGhostPhase(){
     gridBoxes[redGhostPosition].classList.remove('blue')
     gridBoxes[yellowGhostPosition].classList.remove('blue')
     clearInterval(blueGhostYellowInterval)
     clearInterval(blueGhostRedInterval)
     powerScore = 200
+    isBlueGhostPhase = false
     setup()
   }
 
-  function startBlueGhost(pacmanGridBox){
+  function startBlueGhostPhase(pacmanGridBox){
     clearInterval(redGhostInterval)
     clearInterval(yellowGhostInterval)
+    isBlueGhostPhase = true
     pacmanGridBox.classList.remove('power-dot')
     gridBoxes[redGhostPosition].classList.add('blue')
     gridBoxes[yellowGhostPosition].classList.add('blue')
@@ -96,7 +100,7 @@ window.addEventListener('DOMContentLoaded', function(){
     blueGhostRedInterval = setInterval(function(){
       blueGhostDirection('red', redGhostPosition)
     }, 1000)
-    setTimeout(endBlueGhost, 10000)
+    setTimeout(endBlueGhostPhase, 10000)
   }
   //Universal function that moves Pacman in the correct direction when invoked
   function move(){
@@ -117,7 +121,7 @@ window.addEventListener('DOMContentLoaded', function(){
       scoreElem.innerText = score
     }
 
-    if (pacmanGridBox.classList.contains('power-dot')) startBlueGhost(pacmanGridBox)
+    if (pacmanGridBox.classList.contains('power-dot')) startBlueGhostPhase(pacmanGridBox)
 
     if ((pacmanGridBox.classList.contains('blue'))){
       score = score + powerScore
@@ -193,7 +197,7 @@ window.addEventListener('DOMContentLoaded', function(){
   function deathSetUp(){
     livesElem.innerText = lives
     scoreElem.innerText = score
-    position = 11
+    position = 65
     redGhostPosition = 44
     yellowGhostPosition = 45
     gridBoxes[position].classList.add('pacman')
@@ -201,9 +205,6 @@ window.addEventListener('DOMContentLoaded', function(){
     gridBoxes[yellowGhostPosition].classList.add('yellow')
     gridBoxes[redGhostPosition].classList.add('ghost')
     gridBoxes[yellowGhostPosition].classList.add('ghost')
-    pacDots.forEach(function(pacDotIndex){
-      if (!gridBoxes[pacDotIndex].classList.contains('pac-dot')) gridBoxes[pacDotIndex].classList.add('pac-dot')
-    })
     redGhostInterval = setInterval(function(){
       ghostInitiate('red', redGhostPosition)
     } , 500)
@@ -223,7 +224,6 @@ window.addEventListener('DOMContentLoaded', function(){
     yellowGhost.classList.remove('yellow', 'ghost')
     yellowGhost.removeAttribute('data-direction')
     lives--
-    score = 0
     if (lives>0){
       setTimeout(deathSetUp, 2000)
     } else {
@@ -255,7 +255,7 @@ window.addEventListener('DOMContentLoaded', function(){
     let options = []
 
     const canMove = function() {
-      return ((!gridBoxes[newPosition].classList.contains('wall')) &&  (!gridBoxes[newPosition].classList.contains('ghost')))
+      return ((!gridBoxes[newPosition].classList.contains('wall')) &&  (!gridBoxes[newPosition].classList.contains('ghost')) && (Math.abs(newGhostDirection-ghostDirection) !== 2)  )
     }
 
     const moveIncrement = function(){
@@ -331,8 +331,8 @@ window.addEventListener('DOMContentLoaded', function(){
       }
 
       if (Math.abs(xDist)===Math.abs(yDist)){
-        options = [-width, +1, +width, -1]
-        directions = [1, 2, 4, 3]
+        options = [+width, +1, -width, -1]
+        directions = [2, 1, 4, 3]
 
         if (xDist>0){
           moveIncrement()
@@ -346,10 +346,40 @@ window.addEventListener('DOMContentLoaded', function(){
       options = [+1, -width, +width, -1]
       directions = [1, 4, 2, 3]
 
-      if (xDist>0){
-        moveIncrement()
+      if (yDist>0){
+        newPosition = ghostPosition + options[0]
+        newGhostDirection = directions[0]
+        if (!canMove()) {
+          let randomIndex = Math.floor(Math.random()*2)+1
+          newPosition = ghostPosition + options[randomIndex]
+          newGhostDirection = directions[randomIndex]
+          if (!canMove()){
+            randomIndex = (randomIndex===1) ? 2:1
+            newPosition = ghostPosition + options[randomIndex]
+            newGhostDirection = directions[randomIndex]
+            if (!canMove()){
+              newPosition = ghostPosition + options[3]
+              newGhostDirection = directions[3]
+            }
+          }
+        }
       } else {
-        moveIncrementReverse()
+        newPosition = ghostPosition + options[3]
+        newGhostDirection = directions[3]
+        if (!canMove()) {
+          let randomIndex = Math.floor(Math.random()*2)+1
+          newPosition = ghostPosition + options[randomIndex]
+          newGhostDirection = directions[randomIndex]
+          if (!canMove()){
+            randomIndex = (randomIndex===1) ? 2:1
+            newPosition = ghostPosition + options[randomIndex]
+            newGhostDirection = directions[randomIndex]
+            if (!canMove()){
+              newPosition = ghostPosition + options[0]
+              newGhostDirection = directions[0]
+            }
+          }
+        }
       }
     }
 
@@ -358,9 +388,39 @@ window.addEventListener('DOMContentLoaded', function(){
       directions = [4, 3, 1, 2]
 
       if (yDist>0){
-        moveIncrement()
+        newPosition = ghostPosition + options[0]
+        newGhostDirection = directions[0]
+        if (!canMove()) {
+          let randomIndex = Math.floor(Math.random()*2)+1
+          newPosition = ghostPosition + options[randomIndex]
+          newGhostDirection = directions[randomIndex]
+          if (!canMove()){
+            randomIndex = (randomIndex===1) ? 2:1
+            newPosition = ghostPosition + options[randomIndex]
+            newGhostDirection = directions[randomIndex]
+            if (!canMove()){
+              newPosition = ghostPosition + options[3]
+              newGhostDirection = directions[3]
+            }
+          }
+        }
       } else {
-        moveIncrementReverse()
+        newPosition = ghostPosition + options[3]
+        newGhostDirection = directions[3]
+        if (!canMove()) {
+          let randomIndex = Math.floor(Math.random()*2)+1
+          newPosition = ghostPosition + options[randomIndex]
+          newGhostDirection = directions[randomIndex]
+          if (!canMove()){
+            randomIndex = (randomIndex===1) ? 2:1
+            newPosition = ghostPosition + options[randomIndex]
+            newGhostDirection = directions[randomIndex]
+            if (!canMove()){
+              newPosition = ghostPosition + options[0]
+              newGhostDirection = directions[0]
+            }
+          }
+        }
       }
     }
 
@@ -406,8 +466,6 @@ window.addEventListener('DOMContentLoaded', function(){
       }
     }
   }
-
-  setup()
 
   //Invoke the relevant move funtion depending on which arrow key is pressed.
   document.addEventListener('keydown', function(e){
