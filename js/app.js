@@ -9,9 +9,10 @@ window.addEventListener('DOMContentLoaded', function(){
   let pacmanDirection
   let redGhostPosition = 44
   let yellowGhostPosition = 45
+  // let pinkGhostPosition = 43
   let newPosition = 0
   let score = 0 //Initialise player score variable
-  let lives = 3
+  let lives = 10
   let powerScore = 200
   const gridBoxes = [] //Initialise the array to store the gridBoxes in
   let keyCode //Initialise the keyCode variable to store the code of the key when pressed
@@ -21,18 +22,15 @@ window.addEventListener('DOMContentLoaded', function(){
   let isBlueGhostPhase = false
   let redGhostInterval
   let yellowGhostInterval
-  let blueGhostYellowInterval
-  let blueGhostRedInterval
+  // let pinkGhostInterval
+
 
   const scoreElem = document.querySelector('#score')// Get the score element
   const livesElem  = document.querySelector('#lives')// Get the lives element
 
-  const walls = [0,1,2,3,4,5,6,7,8,9,10,19,20,22,23,24,25,26,27,29,40,43,46,49,50,53,54,55,56,59,60,69,70,72,73,76,77,79,80,89,90,91,92,93,94,95,96,97,98,99] //Store which grid boxes are wall
-
-  // const pacDots = [] //Store where the Pacdot are positioned
+  const walls = [0,1,2,3,4,5,6,7,8,9,10,19,20,22,23,24,25,26,27,29,40,42,47,49,50,52,53,54,55,56,57,59,60,69,70,72,73,76,77,79,80,89,90,91,92,93,94,95,96,97,98,99] //Store which grid boxes are wall
 
   const powerDots = [11,18,81,88]
-
 
   //Creates the grid boxes and adds them to the game grid
   for(let i=0; i<(numberOfBoxes); i++){
@@ -58,14 +56,19 @@ window.addEventListener('DOMContentLoaded', function(){
   function setup(){
     gridBoxes[redGhostPosition].classList.add('red')
     gridBoxes[yellowGhostPosition].classList.add('yellow')
+    // gridBoxes[pinkGhostPosition].classList.add('pink')
     if (!gridBoxes[redGhostPosition].classList.contains('ghost')) gridBoxes[redGhostPosition].classList.add('ghost')
     if (!gridBoxes[yellowGhostPosition].classList.contains('ghost')) gridBoxes[yellowGhostPosition].classList.add('ghost')
+    // if (!gridBoxes[pinkGhostPosition].classList.contains('ghost')) gridBoxes[pinkGhostPosition].classList.add('ghost')
     redGhostInterval = setInterval(function(){
       ghostInitiate('red', redGhostPosition)
-    } , 500)
+    } , 1000)
     yellowGhostInterval = setInterval(function(){
       ghostInitiate('yellow', yellowGhostPosition)
-    } , 500)
+    } , 1000)
+    // pinkGhostInterval = setInterval(function(){
+    //   ghostInitiate('pink', pinkGhostPosition)
+    // } , 1000)
   }
 
   setup()
@@ -75,33 +78,6 @@ window.addEventListener('DOMContentLoaded', function(){
     if (box.classList.length===1) box.classList.add('pac-dot')
   })
 
-  function endBlueGhostPhase(){
-    gridBoxes[redGhostPosition].classList.remove('blue')
-    gridBoxes[yellowGhostPosition].classList.remove('blue')
-    clearInterval(blueGhostYellowInterval)
-    clearInterval(blueGhostRedInterval)
-    powerScore = 200
-    isBlueGhostPhase = false
-    setup()
-  }
-
-  function startBlueGhostPhase(pacmanGridBox){
-    clearInterval(redGhostInterval)
-    clearInterval(yellowGhostInterval)
-    isBlueGhostPhase = true
-    pacmanGridBox.classList.remove('power-dot')
-    gridBoxes[redGhostPosition].classList.add('blue')
-    gridBoxes[yellowGhostPosition].classList.add('blue')
-    blueGhostDirection('yellow', yellowGhostPosition)
-    blueGhostYellowInterval = setInterval(function(){
-      blueGhostDirection('yellow', yellowGhostPosition)
-    }, 1000)
-    blueGhostDirection('red', redGhostPosition)
-    blueGhostRedInterval = setInterval(function(){
-      blueGhostDirection('red', redGhostPosition)
-    }, 1000)
-    setTimeout(endBlueGhostPhase, 10000)
-  }
   //Universal function that moves Pacman in the correct direction when invoked
   function move(){
     const pacmanGridBox = gridBoxes[position]
@@ -128,14 +104,19 @@ window.addEventListener('DOMContentLoaded', function(){
       powerScore = powerScore*2
       scoreElem.innerText = score
       if (pacmanGridBox.classList.contains('yellow')){
-        clearInterval(blueGhostYellowInterval)
+        clearInterval(yellowGhostInterval)
         pacmanGridBox.classList.remove('blue','yellow','ghost')
         yellowGhostPosition = 45
       }
       if (pacmanGridBox.classList.contains('red')){
-        clearInterval(blueGhostRedInterval)
+        clearInterval(redGhostInterval)
         pacmanGridBox.classList.remove('blue','red','ghost')
         redGhostPosition = 44
+      }
+      if (pacmanGridBox.classList.contains('pink')){
+        clearInterval(redGhostInterval)
+        pacmanGridBox.classList.remove('blue','pink','ghost')
+        redGhostPosition = 43
       }
     }
   }
@@ -201,31 +182,28 @@ window.addEventListener('DOMContentLoaded', function(){
     redGhostPosition = 44
     yellowGhostPosition = 45
     gridBoxes[position].classList.add('pacman')
-    gridBoxes[redGhostPosition].classList.add('red')
-    gridBoxes[yellowGhostPosition].classList.add('yellow')
-    gridBoxes[redGhostPosition].classList.add('ghost')
-    gridBoxes[yellowGhostPosition].classList.add('ghost')
+    gridBoxes[redGhostPosition].classList.add('red', 'ghost')
+    gridBoxes[yellowGhostPosition].classList.add('yellow', 'ghost')
+    console.log(redGhostPosition, yellowGhostPosition)
     redGhostInterval = setInterval(function(){
       ghostInitiate('red', redGhostPosition)
-    } , 500)
+    } , 1000)
     yellowGhostInterval = setInterval(function(){
       ghostInitiate('yellow', yellowGhostPosition)
-    } , 500)
+    } , 1000)
   }
 
   function deathClear(){
+    gridBoxes[position].classList.remove('pacman')
+    gridBoxes[redGhostPosition].classList.remove('red', 'ghost')
+    gridBoxes[redGhostPosition].removeAttribute('data-direction')
+    gridBoxes[yellowGhostPosition].classList.remove('yellow', 'ghost')
+    gridBoxes[yellowGhostPosition].removeAttribute('data-direction')
     clearInterval(redGhostInterval)
     clearInterval(yellowGhostInterval)
-    gridBoxes[position].classList.remove('pacman')
-    const redGhost = gridBoxes.find(box => box.classList.contains('red'))
-    redGhost.classList.remove('red', 'ghost')
-    redGhost.removeAttribute('data-direction')
-    const yellowGhost = gridBoxes.find(box => box.classList.contains('yellow'))
-    yellowGhost.classList.remove('yellow', 'ghost')
-    yellowGhost.removeAttribute('data-direction')
     lives--
     if (lives>0){
-      setTimeout(deathSetUp, 2000)
+      deathSetUp()
     } else {
       livesElem.innerText = 'Game Over!'
     }
@@ -234,17 +212,19 @@ window.addEventListener('DOMContentLoaded', function(){
   function ghostMove(ghostClass, ghostPosition, newPosition){
     gridBoxes[ghostPosition].classList.remove(ghostClass, 'ghost')
     gridBoxes[ghostPosition].removeAttribute('data-direction')
+    if (isBlueGhostPhase) gridBoxes[ghostPosition].classList.remove('blue')
     ghostPosition = newPosition
     gridBoxes[ghostPosition].classList.add(ghostClass, 'ghost')
     gridBoxes[ghostPosition].setAttribute('data-direction', newGhostDirection.toString())
+    if (isBlueGhostPhase) gridBoxes[ghostPosition].classList.add('blue')
+
+    if (ghostClass === 'red') redGhostPosition = ghostPosition
+    if (ghostClass === 'yellow') yellowGhostPosition = ghostPosition
 
     if (gridBoxes[ghostPosition].classList.contains('pacman')){
       deathClear()
     }
-    if (ghostClass === 'red') return redGhostPosition = ghostPosition
-    if (ghostClass === 'yellow') return yellowGhostPosition = ghostPosition
   }
-
 
   function ghostInitiate(ghostClass, ghostPosition){
 
@@ -255,7 +235,11 @@ window.addEventListener('DOMContentLoaded', function(){
     let options = []
 
     const canMove = function() {
-      return ((!gridBoxes[newPosition].classList.contains('wall')) &&  (!gridBoxes[newPosition].classList.contains('ghost')) && (Math.abs(newGhostDirection-ghostDirection) !== 2)  )
+      console.log(newPosition)
+      console.log(gridBoxes[newPosition])
+      return (
+        (!gridBoxes[newPosition].classList.contains('wall')) &&  (!gridBoxes[newPosition].classList.contains('ghost')) && Math.abs(newGhostDirection-ghostDirection) !== 2
+      )
     }
 
     const moveIncrement = function(){
@@ -265,6 +249,7 @@ window.addEventListener('DOMContentLoaded', function(){
       while(!canMove()) {
         currentOptIndex++
         newPosition = ghostPosition + options[currentOptIndex]
+        console.log(newPosition)
         newGhostDirection = directions[currentOptIndex]
       }
     }
@@ -282,6 +267,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
     const moveChooser = function(){
       if (xDist>yDist) {
+        console.log(newPosition)
         moveIncrement()
       } else {
         moveIncrementReverse()
@@ -294,18 +280,24 @@ window.addEventListener('DOMContentLoaded', function(){
       if (Math.abs(xDist)>(Math.abs(yDist))){
         options = [+1,-width, +width, -1]
         directions = [1, 4, 2, 3]
+        if (isBlueGhostPhase) options.reverse()
+        if (isBlueGhostPhase) directions.reverse()
         moveChooser()
       }
 
       if (Math.abs(xDist)<(Math.abs(yDist))){
         options = [+width,-1, +1, -width]
         directions = [2, 3, 1, 4]
+        if (isBlueGhostPhase) options.reverse()
+        if (isBlueGhostPhase) directions.reverse()
         moveChooser()
       }
 
       if (Math.abs(xDist) === Math.abs(yDist)){
         options = [-width, +1, +width, -1]
         directions = [4, 1, 2, 3]
+        if (isBlueGhostPhase) options.reverse()
+        if (isBlueGhostPhase) directions.reverse()
 
         if (xDist>0){
           moveIncrement()
@@ -320,19 +312,25 @@ window.addEventListener('DOMContentLoaded', function(){
 
       if (Math.abs(xDist)>(Math.abs(yDist))){
         options = [+1, +width, -width, -1]
-        directions = [1, 2, 4, 4]
+        directions = [1, 2, 4, 3]
+        if (isBlueGhostPhase) options.reverse()
+        if (isBlueGhostPhase) directions.reverse()
         moveChooser()
       }
 
       if (Math.abs(xDist)<(Math.abs(yDist))){
         options = [+width,+1, -1, -width]
         directions = [2, 1, 3, 4]
+        if (isBlueGhostPhase) options.reverse()
+        if (isBlueGhostPhase) directions.reverse()
         moveChooser()
       }
 
       if (Math.abs(xDist)===Math.abs(yDist)){
         options = [+width, +1, -width, -1]
         directions = [2, 1, 4, 3]
+        if (isBlueGhostPhase) options.reverse()
+        if (isBlueGhostPhase) directions.reverse()
 
         if (xDist>0){
           moveIncrement()
@@ -345,8 +343,10 @@ window.addEventListener('DOMContentLoaded', function(){
     if (yDist===0){
       options = [+1, -width, +width, -1]
       directions = [1, 4, 2, 3]
+      if (isBlueGhostPhase) options.reverse()
+      if (isBlueGhostPhase) directions.reverse()
 
-      if (yDist>0){
+      if (xDist>0){
         newPosition = ghostPosition + options[0]
         newGhostDirection = directions[0]
         if (!canMove()) {
@@ -386,6 +386,8 @@ window.addEventListener('DOMContentLoaded', function(){
     if (xDist===0){
       options = [-width,-1, +1, +width]
       directions = [4, 3, 1, 2]
+      if (isBlueGhostPhase) options.reverse()
+      if (isBlueGhostPhase) directions.reverse()
 
       if (yDist>0){
         newPosition = ghostPosition + options[0]
@@ -427,44 +429,22 @@ window.addEventListener('DOMContentLoaded', function(){
     ghostMove(ghostClass, ghostPosition, newPosition)
   }
 
-
-
-  function blueGhostMove(ghostClass, ghostPosition, newPosition){
-    if ((!gridBoxes[newPosition].classList.contains('wall')) && (!gridBoxes[newPosition].classList.contains('ghost'))){
-      gridBoxes[ghostPosition].classList.remove('ghost', 'blue')
-      gridBoxes[ghostPosition].classList.remove(ghostClass)
-      ghostPosition = newPosition
-      gridBoxes[ghostPosition].classList.add('ghost', 'blue')
-      gridBoxes[ghostPosition].classList.add(ghostClass)
-      if (ghostClass==='red') return redGhostPosition = ghostPosition
-      if (ghostClass ==='yellow') return yellowGhostPosition = ghostPosition
-    }
+  function endBlueGhostPhase(){
+    gridBoxes[redGhostPosition].classList.remove('blue')
+    gridBoxes[yellowGhostPosition].classList.remove('blue')
+    powerScore = 200
+    isBlueGhostPhase = false
+    clearInterval(redGhostInterval)
+    clearInterval(yellowGhostInterval)
+    setup()
   }
 
-  function blueGhostDirection(ghostClass, ghostPosition){
-    const direction = Math.floor(Math.random()*4)
-    switch(direction){
-      case 0: {
-        const newPosition = ghostPosition+1
-        blueGhostMove(ghostClass, ghostPosition, newPosition)
-        break
-      }
-      case 1: {
-        const newPosition = ghostPosition-1
-        blueGhostMove(ghostClass, ghostPosition, newPosition)
-        break
-      }
-      case 2: {
-        const newPosition = ghostPosition-width
-        blueGhostMove(ghostClass, ghostPosition, newPosition)
-        break
-      }
-      case 3: {
-        const newPosition = ghostPosition+width
-        blueGhostMove(ghostClass, ghostPosition, newPosition)
-        break
-      }
-    }
+  function startBlueGhostPhase(pacmanGridBox){
+    pacmanGridBox.classList.remove('power-dot')
+    if (!gridBoxes[redGhostPosition].classList.contains('blue'))    gridBoxes[redGhostPosition].classList.add('blue')
+    if (!gridBoxes[yellowGhostPosition].classList.contains('blue')) gridBoxes[yellowGhostPosition].classList.add('blue')
+    isBlueGhostPhase = true
+    setTimeout(endBlueGhostPhase, 5000)
   }
 
   //Invoke the relevant move funtion depending on which arrow key is pressed.
