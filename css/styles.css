@@ -2,42 +2,101 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: pacmanFont;
+  src: url(crackman.ttf);
+}
+
+body{
+  background-color: rgb(26, 26, 26);
+}
+
+header{
+  display: block;
+}
+
+#logo-img{
+  width: 550px;
+  display: block;
+  margin: 0 auto;
+}
+
+main{
+  display: flex;
+  justify-content: space-around;
+  padding-top: 30px
+}
+
+#instructions, #controls{
+  /* background-color: yellow; */
+  width: 20%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+p:first-child{
+  font-family: pacmanFont;
+  font-size: 30px;
+}
+
+#controls p{
+  font-family: pacmanFont;
+  font-size: 30px;
+  margin: 0;
+  text-align: center;
+}
+
+/* #controls p, #controls span, #controls button{
+  margin-top: 30px;
+} */
+
+span, p{
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+
 .game{
   display: flex;
   flex-wrap: wrap;
   height: 550px;
   width: 550px;
-  border: grey 1px solid;
+  background-color: black;
+  -webkit-box-shadow:0 0 10px rgb(242, 242, 242);
+	-moz-box-shadow:0 0 10px rgb(242, 242, 242);
+	box-shadow:0 0 10px rgb(242, 242, 242);
 }
 
 .box{
   display: flex;
   align-items: center;
   justify-content: center;
-  height: calc(100%/10);
-  width: calc(100%/10);
-  border: dodgerblue 1px solid;
+  height: calc(100%/24);
+  width: calc(100%/24);
 }
 
 .pac-dot{
   background-image: url('../images/dot.png');
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 40px;
+  background-size: 5px;
 }
 
 .power-dot{
   background-image: url('../images/dot.png');
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 80px;
+  background-size: 10px;
 }
 
 .pacman{
   background-image: url('../images/pacman.png');
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 30px;
+  background-size: 15px;
 }
 
 .pacman[data-direction='1'] {
@@ -72,30 +131,129 @@
   background-image: url('../images/redghost.png');
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 40px;
+  background-size: 20px;
 }
 
 .yellow{
   background-image: url('../images/yellowghost.png');
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 40px;
+  background-size: 20px;
 }
 
 .pink{
   background-image: url('../images/pinkghost.png');
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 40px;
+  background-size: 20px;
+}
+
+.aqua{
+  background-image: url('../images/aquaghost.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 20px;
 }
 
 .blue{
   background-image: url('../images/blueghost.png');
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 40px;
+  background-size: 20px;
+  text-shadow:0 0 10px rgb(242, 242, 242);
+}
+.wall{
+  border: 1px blue solid;
 }
 
-.wall{
-  background-color: brown;
+.pen{
+  background-color: grey;
+}
+
+.pink-pen{
+  background-color: rgb(166, 89, 166);
+  border-bottom: none;
+}
+
+.red-pen{
+  background-color: rgb(166, 89, 89);
+  border-top: none;
+}
+
+.yellow-pen{
+  background-color: 	rgb(166, 166, 89);
+  border-bottom: none;
+}
+
+.aqua-pen{
+  background-color: rgb(89, 166, 166);
+  border-top: none;
+}
+
+button{
+  border: none;
+  border-radius: 10px;
+  font-family: pacmanFont;
+  color: black;
+  width: 150px;
+  height: 50px;
+  font-size: 40px;
+  text-decoration: none;
+  outline: none;
+}
+
+#reset{
+  background-color: 	rgb(26, 26, 255);
+  color: white;
+}
+
+#start{
+  background-color: yellow;
+  color: black;
+}
+
+.opacity{
+  opacity: 0.1;
+}
+
+.modal{
+  position: fixed;
+  top: 35%;
+  left: 29%;
+  z-index: 1;
+  /* height: 200px; */
+  width: 600px;
+  background-color: yellow;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  font-family: pacmanFont;
+  border-radius: 15px;
+}
+
+.modal div{
+  display: flex;
+  align-items: center;
+}
+
+.modal div p{
+  flex-grow: 1;
+  text-align: center;
+  font-size: 40px;
+}
+
+.far{
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  margin: 0 15px 15px 0px;
+}
+
+#gameover-img{
+  width: auto;
+  height: 200px;
+}
+
+.none{
+  display:none;
 }

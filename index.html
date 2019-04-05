@@ -4,15 +4,45 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/app.js" charset="utf-8"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <title>PacMan</title>
   </head>
+
+  <section class="modal none">
+    <div>
+      <img id="gameover-img" src="images/gameover.png">
+      <p>Game over, <br>loser!</p>
+    </div>
+    <i class="far fa-window-close"></i>
+  </section>
+
   <body>
+
+    <header>
+      <img id="logo-img" src="images/logo.png">
+    </header>
     <main>
+      <section id="instructions">
+        <p>Instructions</p>
+        <p>Avoid the pesky ghosts to eat all the PacDots</p>
+        <p>Eat a PowerDot then you have 5 seconds eat the ghosts for more points!</p>
+        <p>Carefull, as after this they will regenerate and chase yoy again!</p>
+      </section>
       <section class='game'>
 
       </section>
+      <section id="controls">
+        <p>Score <br><span id='score'></span></p>
+        <p>Lives left <br><span id='lives'></span></p>
+        <button id="reset" class="none">RESET</button>
+        <button id="start">START</button>
+      </section>
     </main>
-    <p>Score: <span id='score'></span> </p>
-    <p>Lives left: <span id='lives'></span> </p>
+
   </body>
+
+
+
+
 </html>
