@@ -590,8 +590,6 @@ window.addEventListener('DOMContentLoaded', function(){
     clearInterval(yellowGhostInterval)
     clearInterval(pinkGhostInterval)
     clearInterval(aquaGhostInterval)
-    reset.classList.toggle('none')
-    start.classList.toggle('none')
     setup()
   }
 
