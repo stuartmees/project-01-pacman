@@ -223,6 +223,15 @@ button{
   opacity: 0.1;
 }
 
+.modal-background{
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(255, 255, 255, 0.7);
+  position: fixed;
+  top:0px;
+  left: 0px;
+}
+
 .modal{
   position: fixed;
   top: 35%;

@@ -37,7 +37,7 @@ window.addEventListener('DOMContentLoaded', function(){
   const reset = document.getElementById('reset')// Get the reset button
   const start = document.getElementById('start')// Get the start button
   const grid = document.querySelector('.game')
-  const gameOver = document.querySelector('.modal')
+  const gameOver = document.querySelector('.modal-background')
   const close = document.querySelector('.far')
   console.log(close)
 
@@ -72,7 +72,7 @@ window.addEventListener('DOMContentLoaded', function(){
     pinkGhostPosition = 301
     aquaGhostPosition = 277
     score = 0
-    lives = 3
+    lives = 1
     position = 289
     livesElem.innerText = lives
     scoreElem.innerText = score
