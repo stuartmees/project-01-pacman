@@ -230,11 +230,14 @@ button{
   position: fixed;
   top:0px;
   left: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal{
   position: fixed;
-  z-index: 2;
+  z-index: 1;
   background-color: yellow;
   display: flex;
   flex-direction: column;
@@ -244,14 +247,10 @@ button{
 
 .welcome-modal{
   width: 800px;
-  top: 38%;
-  left: 21%;
   height: 300px;
 }
 
 .gameover-modal{
-  top: 35%;
-  left: 29%;
   font-family: pacmanFont;
   width: 600px;
 }
