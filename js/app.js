@@ -74,7 +74,7 @@ window.addEventListener('DOMContentLoaded', function(){
     pinkGhostPosition = 301
     aquaGhostPosition = 277
     score = 0
-    lives = 1
+    lives = 3
     position = 289
     livesElem.innerText = lives
     scoreElem.innerText = score
