@@ -9,8 +9,8 @@
     <title>PacMan</title>
   </head>
 
-  <section class="modal-background none">
-    <section class="modal">
+  <section class="game-over modal-background none">
+    <section class="modal gameover-modal">
       <div>
         <img id="gameover-img" src="images/gameover.png">
         <p>Game over, <br>loser!</p>
@@ -19,6 +19,21 @@
     </section>
   </section>
 
+  <section class="welcome modal-background">
+    <section class="modal welcome-modal">
+      <div  id="instructions">
+        <p id="instructions-title">Instructions</p>
+        <ul>
+          <li>Use the arrow keys to avoid the pesky ghosts to eat all the PacDots.</li>
+          <li>Eat a PowerDot then you have 5 seconds eat the ghosts for more points!</li>
+          <li>Carefull, as after this they will regenerate and chase you again!</li>
+        </ul>
+      </div>
+      <div>
+        <button id="welcome-ok">ok</button>
+      </div>
+    </section>
+  </section>
 
   <body>
 
@@ -26,20 +41,16 @@
       <img id="logo-img" src="images/logo.png">
     </header>
     <main>
-      <section id="instructions">
-        <p>Instructions</p>
-        <p>Avoid the pesky ghosts to eat all the PacDots</p>
-        <p>Eat a PowerDot then you have 5 seconds eat the ghosts for more points!</p>
-        <p>Carefull, as after this they will regenerate and chase you again!</p>
+      <section class="controls side">
+        <button id="reset">RESET</button>
+        <button id="start">START</button>
       </section>
       <section class='game'>
 
       </section>
-      <section id="controls">
+      <section class="info side">
         <p>Score <br><span id='score'></span></p>
         <p>Lives left <br><span id='lives'></span></p>
-        <button id="reset" class="none">RESET</button>
-        <button id="start">START</button>
       </section>
     </main>
 

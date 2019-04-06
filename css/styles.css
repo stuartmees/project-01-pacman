@@ -1,5 +1,6 @@
 *{
   box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
 }
 
 @font-face {
@@ -28,8 +29,7 @@ main{
   padding-top: 30px
 }
 
-#instructions, #controls{
-  /* background-color: yellow; */
+.side{
   width: 20%;
   color: white;
   display: flex;
@@ -39,32 +39,32 @@ main{
 }
 
 #instructions{
-  font-family: pacmanFont;
-  font-size: 20px;
   text-align: center;
-  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  font-size: 20px;
 }
 
-p:first-child{
-  font-size: 30px;
+ul{
+  list-style: none;
 }
 
-#controls p{
+#instructions-title{
+  font-family: pacmanFont;
+  font-size: 60px;
+  margin: 10px;
+}
+
+.info p{
   font-family: pacmanFont;
   font-size: 30px;
   margin: 0;
   text-align: center;
 }
 
-/* #controls p, #controls span, #controls button{
-  margin-top: 30px;
-} */
-
 span{
-  font-family: 'Roboto', sans-serif;
   text-align: center;
 }
-
 
 .game{
   display: flex;
@@ -214,7 +214,7 @@ button{
   color: white;
 }
 
-#start{
+#start, #ok{
   background-color: yellow;
   color: black;
 }
@@ -234,17 +234,26 @@ button{
 
 .modal{
   position: fixed;
-  top: 35%;
-  left: 29%;
-  z-index: 1;
-  /* height: 200px; */
-  width: 600px;
+  z-index: 2;
   background-color: yellow;
   display: flex;
   flex-direction: column;
   padding: 20px;
-  font-family: pacmanFont;
   border-radius: 15px;
+}
+
+.welcome-modal{
+  width: 800px;
+  top: 38%;
+  left: 21%;
+  height: 300px;
+}
+
+.gameover-modal{
+  top: 35%;
+  left: 29%;
+  font-family: pacmanFont;
+  width: 600px;
 }
 
 .modal div{
@@ -258,7 +267,8 @@ button{
   font-size: 40px;
 }
 
-.far{
+
+.far, #welcome-ok{
   position: absolute;
   right: 0px;
   bottom: 0px;

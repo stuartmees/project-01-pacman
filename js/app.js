@@ -37,9 +37,11 @@ window.addEventListener('DOMContentLoaded', function(){
   const reset = document.getElementById('reset')// Get the reset button
   const start = document.getElementById('start')// Get the start button
   const grid = document.querySelector('.game')
-  const gameOver = document.querySelector('.modal-background')
+  const gameOver = document.querySelector('.game-over')
   const close = document.querySelector('.far')
-  console.log(close)
+  const welcomeOk = document.querySelector('#welcome-ok')
+  const welcome = document.querySelector('.welcome')
+
 
   const walls = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,35,36,48,72,96,120,144,168,192,216,240,264,288,312,323,324,336,360,384,408,432,456,480,504,528,552,23,47,71,95,119,143,167,191,215,239,251,252,263,273,278,287,297,302,311,335,359,383,407,431,455,479,503,527,551,552,553,554,555,556,557,558,559,560,561,562,563,564,565,566,567,568,569,570,571,572,573,574,575,274,275,277,298,299,300,276,301,223,224,225,343,344,345,271,295,370,394,418,442,491,492,491,492,323,324,348,372,350,351,352,280,304,230,231,232,157,181,205,203,227,83,107,131,155,84,133,183,184,185,186,234,258,282,306,330,354,378,402,398,399,400,401,389,390,391,392,173,197,221,245,269,293,317,341,174,175,176,177,75,76,78,79,80,81,130,123,124,125,126,127,128,147,171,195,219,267,291,315,339,363,387,388,435,436,438,439,440,441,483,484,486,487,488,489,506,532,533,534,536,537,539,540,542,543,545,546,547,525,445,494,495,496,497,499,500,447,448,449,450,451,452,187,188,212,236,260,284,308,332,380,404,428,134,135,136,137,139,140,86,87,88,89,91,92,28,29,30,31,28,29,30,31,40,41,42,43,142,190,214,238,190,214,238,382,406,430,454,478,361,385,409,433,457,266,290,314,121,169,193,217,50,74,69,93,285,309,333,420,444,468,33,38,179,396,535,538,541,544,166,39,32,34,37,145]
 
@@ -82,18 +84,6 @@ window.addEventListener('DOMContentLoaded', function(){
     powerDots.forEach(function(dotIndex){
       gridBoxes[dotIndex].classList.add('power-dot')
     })
-    // gridBoxes[redGhostPosition].classList.add('red')
-    // gridBoxes[yellowGhostPosition].classList.add('yellow')
-    // gridBoxes[pinkGhostPosition].classList.add('pink')
-    // gridBoxes[aquaGhostPosition].classList.add('aqua')
-    gridBoxes[redGhostPosition].setAttribute('data-direction', 1)
-    gridBoxes[yellowGhostPosition].setAttribute('data-direction', 1)
-    gridBoxes[pinkGhostPosition].setAttribute('data-direction', 1)
-    gridBoxes[aquaGhostPosition].setAttribute('data-direction', 1)
-    gridBoxes[redGhostPosition].classList.add('ghost')
-    gridBoxes[yellowGhostPosition].classList.add('ghost')
-    gridBoxes[pinkGhostPosition].classList.add('ghost')
-    gridBoxes[aquaGhostPosition].classList.add('ghost')
 
     gridBoxes.forEach(function(box){
       if (box.classList.length===1) box.classList.add('pac-dot')
@@ -109,22 +99,17 @@ window.addEventListener('DOMContentLoaded', function(){
     yellowPen.classList.add('yellow-pen')
     aquaPen.classList.add('aqua-pen')
 
-    // redGhostInterval = setInterval(function(){
-    //   ghostInitiate('red', redGhostPosition)
-    // } , interval)
-    // yellowGhostInterval = setInterval(function(){
-    //   ghostInitiate('yellow', yellowGhostPosition)
-    // } , interval)
-    // pinkGhostInterval = setInterval(function(){
-    //   ghostInitiate('pink', pinkGhostPosition)
-    // } , interval)
-    // aquaGhostInterval = setInterval(function(){
-    //   ghostInitiate('aqua', aquaGhostPosition)
-    // } , interval)
-
   }
 
   function starter(){
+    gridBoxes[redGhostPosition].setAttribute('data-direction', 1)
+    gridBoxes[yellowGhostPosition].setAttribute('data-direction', 1)
+    gridBoxes[pinkGhostPosition].setAttribute('data-direction', 1)
+    gridBoxes[aquaGhostPosition].setAttribute('data-direction', 1)
+    gridBoxes[redGhostPosition].classList.add('ghost')
+    gridBoxes[yellowGhostPosition].classList.add('ghost')
+    gridBoxes[pinkGhostPosition].classList.add('ghost')
+    gridBoxes[aquaGhostPosition].classList.add('ghost')
     gridBoxes[redGhostPosition].classList.add('red')
     gridBoxes[yellowGhostPosition].classList.add('yellow')
     gridBoxes[pinkGhostPosition].classList.add('pink')
@@ -612,12 +597,13 @@ window.addEventListener('DOMContentLoaded', function(){
 
   start.addEventListener('click', function(){
     starter()
-    reset.classList.toggle('none')
-    start.classList.toggle('none')
   })
 
   close.addEventListener('click', () => {
     gameOver.classList.toggle('none')
   })
 
+  welcomeOk.addEventListener('click', () => {
+    welcome.classList.toggle('none')
+  })
 })
