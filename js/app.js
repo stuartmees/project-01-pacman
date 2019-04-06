@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', function(){
   const numberOfBoxes = width*width
   let powerScore
   const gridBoxes = [] //Initialise the array to store the gridBoxes in
-  const interval = 500
+  const interval = 400
 
   let score//Initialise player score variable
   let keyCode //Initialise the keyCode variable to store the code of the key when pressed
@@ -60,7 +60,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
   //Time out frunction to end the blue ghost isBlueGhostPhase
   function bluePhaseTimeoutFunction(){
-    bluePhaseTimeout = setTimeout(endBlueGhostPhase, 10000)
+    bluePhaseTimeout = setTimeout(endBlueGhostPhase, 5000)
   }
 
   //Function to control initial set up=============================
@@ -72,7 +72,7 @@ window.addEventListener('DOMContentLoaded', function(){
     pinkGhostPosition = 301
     aquaGhostPosition = 277
     score = 0
-    lives = 1
+    lives = 3
     position = 289
     livesElem.innerText = lives
     scoreElem.innerText = score
@@ -142,6 +142,7 @@ window.addEventListener('DOMContentLoaded', function(){
     aquaGhostInterval = setInterval(function(){
       ghostInitiate('aqua', aquaGhostPosition)
     } , interval)
+
   }
 
   setup()
@@ -299,7 +300,6 @@ window.addEventListener('DOMContentLoaded', function(){
     if (lives>0){
       setTimeout(deathSetUp, 2000)
     } else {
-      console.log('toggling none')
       gameOver.classList.toggle('none')
     }
   }
@@ -608,7 +608,6 @@ window.addEventListener('DOMContentLoaded', function(){
     reset.classList.toggle('none')
     start.classList.toggle('none')
     setup()
-    document.removeEventListener('keydown')
   }
 
   start.addEventListener('click', function(){
