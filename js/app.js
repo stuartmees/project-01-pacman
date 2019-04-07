@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', function(){
   const numberOfBoxes = width*width
   let powerScore
   const gridBoxes = [] //Initialise the array to store the gridBoxes in
-  const interval = 400
+  const interval = 1000
 
   let score//Initialise player score variable
   let keyCode //Initialise the keyCode variable to store the code of the key when pressed
@@ -306,8 +306,40 @@ window.addEventListener('DOMContentLoaded', function(){
     if (ghostClass === 'pink') pinkGhostPosition = ghostPosition
     if (ghostClass === 'aqua') aquaGhostPosition = ghostPosition
 
-    if (gridBoxes[ghostPosition].classList.contains('pacman')){
+    if (gridBoxes[ghostPosition].classList.contains('pacman') && !gridBoxes[ghostPosition].classListcontains('blue')){
       deathClear()
+    }
+
+    if (gridBoxes[ghostPosition].classList.contains('pacman') && gridBoxes[ghostPosition].classListcontains('blue')){
+
+      score = score + powerScore
+      powerScore = powerScore*2
+      scoreElem.innerText = score
+
+      if (gridBoxes[ghostPosition].classList.contains('yellow')){
+        clearInterval(yellowGhostInterval)
+        gridBoxes[ghostPosition].classList.remove('blue','yellow','ghost')
+        yellowGhostPosition = 298
+        gridBoxes[yellowGhostPosition].classList.add('yellow', 'ghost')
+      }
+      if (gridBoxes[ghostPosition].classList.contains('red')){
+        clearInterval(redGhostInterval)
+        gridBoxes[ghostPosition].classList.remove('blue','red','ghost')
+        redGhostPosition = 274
+        gridBoxes[redGhostPosition].classList.add('red', 'ghost')
+      }
+      if (gridBoxes[ghostPosition].classList.contains('pink')){
+        clearInterval(pinkGhostInterval)
+        gridBoxes[ghostPosition].classList.remove('blue','pink','ghost')
+        pinkGhostPosition = 301
+        gridBoxes[pinkGhostPosition].classList.add('pink', 'ghost')
+      }
+      if (gridBoxes[ghostPosition].classList.contains('aqua')){
+        clearInterval(aquaGhostInterval)
+        gridBoxes[ghostPosition].classList.remove('blue','aqua','ghost')
+        aquaGhostPosition = 277
+        gridBoxes[aquaGhostPosition].classList.add('aqua', 'ghost')
+      }
     }
   }
 
