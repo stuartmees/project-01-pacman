@@ -8,7 +8,8 @@ window.addEventListener('DOMContentLoaded', function(){
   const numberOfBoxes = width*width
   let powerScore
   const gridBoxes = [] //Initialise the array to store the gridBoxes in
-  const interval = 1000
+  const interval = 400
+  let gameInPlay = false
 
   let score//Initialise player score variable
   let keyCode //Initialise the keyCode variable to store the code of the key when pressed
@@ -102,6 +103,9 @@ window.addEventListener('DOMContentLoaded', function(){
   }
 
   function starter(){
+
+    gameInPlay = true
+
     gridBoxes[redGhostPosition].setAttribute('data-direction', 1)
     gridBoxes[yellowGhostPosition].setAttribute('data-direction', 1)
     gridBoxes[pinkGhostPosition].setAttribute('data-direction', 1)
@@ -306,7 +310,7 @@ window.addEventListener('DOMContentLoaded', function(){
     if (ghostClass === 'pink') pinkGhostPosition = ghostPosition
     if (ghostClass === 'aqua') aquaGhostPosition = ghostPosition
 
-    if (gridBoxes[ghostPosition].classList.contains('pacman') && !gridBoxes[ghostPosition].classListcontains('blue')){
+    if (gridBoxes[ghostPosition].classList.contains('pacman') && !gridBoxes[ghostPosition].classList.contains('blue')){
       deathClear()
     }
 
@@ -590,20 +594,22 @@ window.addEventListener('DOMContentLoaded', function(){
 
   //Invoke the relevant Pacman move funtion depending on which arrow key is pressed.
   document.addEventListener('keydown', function(e){
-    keyCode = e.keyCode
-    switch(keyCode){
-      case 39:
-        moveRight()
-        break
-      case 37:
-        moveLeft()
-        break
-      case 40:
-        moveDown()
-        break
-      case 38:
-        moveUp()
-        break
+    if (gameInPlay===true){
+      keyCode = e.keyCode
+      switch(keyCode){
+        case 39:
+          moveRight()
+          break
+        case 37:
+          moveLeft()
+          break
+        case 40:
+          moveDown()
+          break
+        case 38:
+          moveUp()
+          break
+      }
     }
   })
 
@@ -618,6 +624,7 @@ window.addEventListener('DOMContentLoaded', function(){
     gridBoxes[pinkGhostPosition].removeAttribute('data-direction')
     gridBoxes[aquaGhostPosition].classList.remove('aqua', 'ghost','blue')
     gridBoxes[aquaGhostPosition].removeAttribute('data-direction')
+    gameInPlay = false
     clearInterval(redGhostInterval)
     clearInterval(yellowGhostInterval)
     clearInterval(pinkGhostInterval)
@@ -626,7 +633,7 @@ window.addEventListener('DOMContentLoaded', function(){
   }
 
   start.addEventListener('click', function(){
-    starter()
+    if (gameInPlay === false) starter()
   })
 
   close.addEventListener('click', () => {
