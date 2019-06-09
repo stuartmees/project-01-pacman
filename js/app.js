@@ -60,7 +60,7 @@ window.addEventListener('DOMContentLoaded', function(){
     gridBoxes.push(gridBox)
   }
 
-  //Time out frunction to end the blue ghost isBlueGhostPhase
+  //Time out function to end the blue ghost isBlueGhostPhase
   function bluePhaseTimeoutFunction(){
     bluePhaseTimeout = setTimeout(endBlueGhostPhase, 5000)
   }
@@ -313,35 +313,32 @@ window.addEventListener('DOMContentLoaded', function(){
 
   function ghostInitiate(ghostClass, ghostPosition){
 
+    //Calculate the vertical and horizontal distances for comparison later==================
     const xDist = (position%width)-(ghostPosition%width)
     const yDist = Math.floor(ghostPosition/width)-Math.floor(position/width)
+
     ghostDirection = parseInt(gridBoxes[ghostPosition].getAttribute('data-direction'))
     let directions = []
     let options = []
 
+    //Check if the ghost can move into the new suggetsed gridBox=============================
     const canMove = function() {
       return (
         gridBoxes[newPosition] &&
         (!gridBoxes[newPosition].classList.contains('wall')) && Math.abs(newGhostDirection-ghostDirection) !== 2
-        // && ((!gridBoxes[newPosition].classList.contains('ghost')))
       )
     }
 
+    //Change the position of the ghost if it is possible
     const moveIncrement = function(){
       let currentOptIndex = 0
       newPosition = ghostPosition + options[currentOptIndex]
       newGhostDirection = directions[currentOptIndex]
 
-      // newPosition = newPosition%width===0 && newGhostDirection === +1 ? newPosition - width : newPosition
-      // newPosition = newPosition%width === width-1 && newGhostDirection === -1 ? newPosition + width : newPosition
-
       while(!canMove()) {
         currentOptIndex++
         newPosition = ghostPosition + options[currentOptIndex]
         newGhostDirection = directions[currentOptIndex]
-
-        // newPosition = ((newPosition%width===0) && (newGhostDirection === +1)) ? newPosition - width : newPosition
-        // newPosition = (((newPosition+1)%width === 0) && (newGhostDirection === -1)) ? newPosition + width : newPosition
       }
     }
 
@@ -350,19 +347,14 @@ window.addEventListener('DOMContentLoaded', function(){
       newPosition = ghostPosition + options[currentOptIndex]
       newGhostDirection = directions[currentOptIndex]
 
-      // newPosition = ((newPosition%width===0) && (newGhostDirection === +1)) ? newPosition - width : newPosition
-      // newPosition = (((newPosition+1)%width === 0) && (newGhostDirection === -1)) ? newPosition + width : newPosition
-
       while(!canMove()) {
         currentOptIndex--
         newPosition = ghostPosition + options[currentOptIndex]
         newGhostDirection = directions[currentOptIndex]
-
-        // newPosition = ((newPosition%width===0) && (newGhostDirection === +1)) ? newPosition - width : newPosition
-        // newPosition = (((newPosition+1)%width === 0) && (newGhostDirection === -1)) ? newPosition + width : newPosition
       }
     }
 
+    //This function decides which direction and option to try first.
     const moveChooser = function(){
       if (xDist>yDist) {
         moveIncrement()
@@ -371,8 +363,11 @@ window.addEventListener('DOMContentLoaded', function(){
       }
     }
 
+
+    //Here order of directions and options is set based of relative positions of the ghost and pacman
     if ((Math.abs(xDist)>0) && (Math.abs(yDist)>0)){
 
+      //If x-dist is greater than y-dist then move horizontally first========================
       if (Math.abs(xDist)>(Math.abs(yDist))){
         options = [+1,-width, +width, -1]
         directions = [1, 4, 2, 3]
@@ -381,6 +376,7 @@ window.addEventListener('DOMContentLoaded', function(){
         moveChooser()
       }
 
+      //If y-dist is greater than x-dist then move vertically first========================
       if (Math.abs(xDist)<(Math.abs(yDist))){
         options = [+width,-1, +1, -width]
         directions = [2, 3, 1, 4]
@@ -389,6 +385,7 @@ window.addEventListener('DOMContentLoaded', function(){
         moveChooser()
       }
 
+      //If y-dist is equal to x-dist then move deosnt matter which way first========================
       if (Math.abs(xDist) === Math.abs(yDist)){
         options = [-width, +1, +width, -1]
         directions = [4, 1, 2, 3]
@@ -436,6 +433,7 @@ window.addEventListener('DOMContentLoaded', function(){
       }
     }
 
+    //Control the movement of the Ghost is it is level with PacMan
     function downPropogate(){
       newPosition = ghostPosition + options[3]
       newGhostDirection = directions[3]

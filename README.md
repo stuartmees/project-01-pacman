@@ -61,27 +61,49 @@ PacMan movements: ← ↑ → ↓ keys
 ## Process
 _Describe the process of building the game. How did you get started? How did you manage your time? How would you do things next time?_
 
-Initially I generated the boxes that make up the game grid using javascript that looped over is a for loop a certain number of times creating a div element and appending it to its parent. these boxes were stored in an array, gridBoxes.
+Initially I generated the boxes that make up the game grid using JavaScript that looped over a 'for loop' a certain number of times creating a div element and appending it to its parent each time. These boxes were stored in an array, gridBoxes.
 
 These boxes would eventually make up the wall and the paths in the maze.
 
 A basic maze was made by adding a .wall class to some of the gridBox elements.
 
-First of all the arrow keys were made to move PacMan via an event listener. When the keys were pressed the relevant new position (gridBox) was calculated and the .pacman class was removed from the current gridBox to the new gridBox position, by referencing their array ids.
+First of all the arrow keys were made to move PacMan via an event listener. When the keys were pressed the relevant new position (gridBox) was calculated and via the move() function the .pacman class was removed from the current gridBox to the new gridBox position, by referencing their array ids.
 
-One ghost was then added to the DOM by adding the relevant ghost classes to the relevant gridBox. A function was run on an interval that generated a random direction to move and calculated the new index to move to on the grid the every 0.5s and then moved them in in that direction.
+One ghost was then added to the DOM by adding the relevant ghost class to the relevant gridBox. A function was run on an interval that generated a random direction to move, calculated the new index to move to on the grid and then moved them in in that direction.
 
 Logic was added to both the move functions for PacMan and the ghost that checked if they were able to move into the new position. This was checked by checking if the new position gridBox contained a class of .wall. If it did then PacMan would just not move, and for the ghost, the ghost would not move, and then 0.5 seconds later a new direction was generated - this would continue until a direction was generated that did not move the ghost into the wall.
 
-Next came the task of making them move towards PacMan. I thought about this in two parts: logic for working out the best direction to move in to get nearer to PacMan and then the logic to check if that move is allowed and if not how to check another direction and what direction to check.
+Then I put the logic in that detected if PacMan and any ghost were in the same gridBox, and thus PacMan had been eaten. If this happened ghost positions were reset, their intervals cleared and set again and the score adjusted appropriately.
 
-To decide which directions the ghost should try, and in what order they should try them i considered the column and rows of the gridBoxes.
+### Challenges and wins
+_Describe the biggest challenges.
+  How did you overcome them?
+  Did you decide to pivot because of time constraints?
+  What did you learn from these problems?_
 
-### Challenges
-_Describe the biggest challenges. How did you overcome them? Did you decide to pivot because of time constraints? What did you learn from these problems?_
+_Describe the wins.
+  What are you most proud of?
+  What did this project help you to understand the most?_
 
-### Wins
-_Describe the wins. What are you most proud of? What did this project help you to understand the most?_
+My biggest challenge was making the ghosts appear to follow PacMan instead of just moving randomly. This was therefore also my biggest win.
+
+I thought about this in two parts: logic for working out the best direction to move in to, to get nearer to PacMan and then the logic to check if that move is allowed and if not how to check another direction and what direction to check.
+
+To decide the directions the ghost should try first, and in what order they should try them I considered the columns and rows of the gridBoxes. By calculating which row PacMan and a given ghost were in then comparing them I could determine xDist (horizontal distance and direction) and yDist (vertical distance and direction) between PacMan and a given ghost. The sign of these distances and their magnitude enabled me to determine determined where PacMan was relative to the ghost and therefore determine which direction the ghost should try first and then the the order of direction its should try after that. This was put into the direction array.
+
+After this logic was worked out, it was easy to check if the ghost could move into a certain position as it was the same logic that was already being applied to the ghosts. If the first direction tried to move the ghost into a gridBox it couldn't go into, the other directions were tried one after another in the order specified by the relevant direction array.
+
+Once this was set in place making the ghosts move away from PacMan when they were blue was as simple as looping through the relevant direction array in the reverse order.
+
+There was two things I learnt from this project: start small and refactor as you go.
+
+I Initially started trying to work out recursive functions that could calculate the quickest route for the ghost before I had built in the smallest functionality. This wasted a lot of time at the start of my project. Even though a larger picture and aim is needed it is important to focus on small parts first individually first. When I finally did this I realised how the simplest of tasks can be more complex and take longer than expected. This gave me a more accurate idea of what I should be aiming for and made me find a more realistic and simpler approach to the ghosts movement.
+
+I also learnt the hard way that re-factoring should be an ongoing, real-time process throughout the project: I tried to re-factor towards the end in one batch and it was extremely time consuming to de-bug.
 
 ## Future features
 _If you were to revisit this project in the future what features would you add?_
+
+If I were to revisit this project I would give the ghosts different personalities. This could be as simple as giving the different ghost different time intervals or by making the differnt ghosts follow different logic for deciding direction. Some ghosts could move randomly, some prefer a given direction and some follow the logic I have given them.
+
+I would also like to make different levels with increasing complexity of maze and ghost 'intelligence' as you moved through the levels.
