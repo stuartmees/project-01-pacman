@@ -57,9 +57,9 @@ PacMan movements: ← ↑ → ↓ keys
 7. The notification has an 'x' bottom right which has an event listener attached to it that means when it is clicked the notification element's .none class is toggled to turn the display of it to 'none' so it disappears. The user can then click the reset button to play again.
 
 
-## Process
+# Process
 
-# Set-up
+## 1. Set-up
 
 Initially I generated the boxes that make up the game grid using code that looped over a 'for loop' a certain number of times creating a div element and appending it to its parent each time. These boxes were stored in an array, gridBoxes.
 
@@ -80,7 +80,7 @@ A basic maze was made by adding a .wall class to some of the gridBox elements.
 ```
 walls.forEach((wallIndex) => gridBoxes[wallIndex].classList.add('wall'))
 ```
-# Pac-Man & Ghost basic movement
+## 2. Pac-Man & Ghost Basic Movement
 
 First of all the arrow keys were made to move PacMan via an event listener. When the keys were pressed the relevant new position (gridBox) was calculated and via the move() function the .pacman class was removed from the current gridBox to the new gridBox position, by referencing their array ids.
 
@@ -90,7 +90,9 @@ Logic was added to both the move functions for PacMan and the ghost that checked
 
 Then I put the logic in that detected if PacMan and any ghost were in the same gridBox, and thus PacMan had been eaten. If this happened ghost positions were reset, their intervals cleared and set again and the score adjusted appropriately.
 
-### Challenges and wins
+# Challenges and Wins
+
+## 'Intelligent' Ghost Movement
 
 My biggest challenge was making the ghosts appear to follow PacMan instead of just moving randomly. This was therefore also my biggest win.
 
@@ -182,7 +184,7 @@ const canMove = function() {
 
 Once this was set in place making the ghosts move away from PacMan when they were blue was as simple as looping through the relevant direction array in the reverse order. This can be seen in the above code where the options and directions array are reversed in the blue ghost phase.
 
-## Reflections
+# Reflections
 
 There was two things I learnt from this project: start small and refactor as you go.
 
@@ -190,7 +192,7 @@ I Initially started trying to work out recursive functions that could calculate 
 
 I also learnt the hard way that re-factoring should be an ongoing, real-time process throughout the project: I tried to re-factor towards the end in one batch and it was extremely time consuming to de-bug.
 
-## Future features
+# Future features
 
 If I were to revisit this project I would give the ghosts different personalities. This could be as simple as giving the different ghost different time intervals or by making the differnt ghosts follow different logic for deciding direction. Some ghosts could move randomly, some prefer a given direction and some follow the logic I have given them.
 
