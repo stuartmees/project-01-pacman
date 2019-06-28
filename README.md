@@ -87,13 +87,93 @@ _Describe the wins.
 
 My biggest challenge was making the ghosts appear to follow PacMan instead of just moving randomly. This was therefore also my biggest win.
 
-I thought about this in two parts: logic for working out the best direction to move in to, to get nearer to PacMan and then the logic to check if that move is allowed and if not how to check another direction and what direction to check.
+I thought about this in two parts: logic for working out the best direction to move in, to get nearer to PacMan and then the logic to check if that move is allowed.
 
-To decide the directions the ghost should try first, and in what order they should try them I considered the columns and rows of the gridBoxes. By calculating which row PacMan and a given ghost were in then comparing them I could determine xDist (horizontal distance and direction) and yDist (vertical distance and direction) between PacMan and a given ghost. The sign of these distances and their magnitude enabled me to determine determined where PacMan was relative to the ghost and therefore determine which direction the ghost should try first and then the the order of direction its should try after that. This was put into the direction array.
+To decide the order of directions the ghost should try I considered the columns and rows of the gridBoxes. By determining which row PacMan and a given ghost were in then comparing them I could determine xDist (horizontal distance and direction) and yDist (vertical distance and direction) between PacMan and a given ghost. The sign of these distances and their magnitude enabled me to determin where PacMan was relative to the ghost and therefore determine which direction the ghost should try first and then the order of directions its should try after that. This was put into the options array.
 
-After this logic was worked out, it was easy to check if the ghost could move into a certain position as it was the same logic that was already being applied to the ghosts. If the first direction tried to move the ghost into a gridBox it couldn't go into, the other directions were tried one after another in the order specified by the relevant direction array.
+```
+//Here order of directions and options is set based of relative positions of the ghost and pacman
+if ((Math.abs(xDist)>0) && (Math.abs(yDist)>0)){
 
-Once this was set in place making the ghosts move away from PacMan when they were blue was as simple as looping through the relevant direction array in the reverse order.
+  //If x-dist is greater than y-dist then move horizontally first========================
+  if (Math.abs(xDist)>(Math.abs(yDist))){
+    options = [+1,-width, +width, -1]
+    directions = [1, 4, 2, 3]
+    if (isBlueGhostPhase) options.reverse()
+    if (isBlueGhostPhase) directions.reverse()
+    moveChooser()
+  }
+
+  //If y-dist is greater than x-dist then move vertically first========================
+  if (Math.abs(xDist)<(Math.abs(yDist))){
+    options = [+width,-1, +1, -width]
+    directions = [2, 3, 1, 4]
+    if (isBlueGhostPhase) options.reverse()
+    if (isBlueGhostPhase) directions.reverse()
+    moveChooser()
+  }
+
+  //If y-dist is equal to x-dist then move doesnt matter which way first========================
+  if (Math.abs(xDist) === Math.abs(yDist)){
+    options = [-width, +1, +width, -1]
+    directions = [4, 1, 2, 3]
+    if (isBlueGhostPhase) options.reverse()
+    if (isBlueGhostPhase) directions.reverse()
+
+    if (xDist>0){
+      moveIncrement()
+    } else {
+      moveIncrementReverse()
+    }
+  }
+}
+
+if ((xDist>0 && yDist<0) || (xDist<0 && yDist>0)){
+
+  if (Math.abs(xDist)>(Math.abs(yDist))){
+    options = [+1, +width, -width, -1]
+    directions = [1, 2, 4, 3]
+    if (isBlueGhostPhase) options.reverse()
+    if (isBlueGhostPhase) directions.reverse()
+    moveChooser()
+  }
+
+  if (Math.abs(xDist)<(Math.abs(yDist))){
+    options = [+width,+1, -1, -width]
+    directions = [2, 1, 3, 4]
+    if (isBlueGhostPhase) options.reverse()
+    if (isBlueGhostPhase) directions.reverse()
+    moveChooser()
+  }
+
+  if (Math.abs(xDist)===Math.abs(yDist)){
+    options = [+width, +1, -width, -1]
+    directions = [2, 1, 4, 3]
+    if (isBlueGhostPhase) options.reverse()
+    if (isBlueGhostPhase) directions.reverse()
+
+    if (xDist>0){
+      moveIncrement()
+    } else {
+      moveIncrementReverse()
+    }
+  }
+}
+```
+
+After this logic was worked out, it was easy to check if the ghost could move into a certain position as it was the same logic that was already being applied to the ghosts. If the first direction tried to move the ghost into a gridBox it couldn't go into, the other directions were tried in the order specified by the relevant options array.
+
+```
+//Check if the ghost can move into the new suggetsed gridBox=============================
+const canMove = function() {
+  return (
+    gridBoxes[newPosition] &&
+    (!gridBoxes[newPosition].classList.contains('wall')) && Math.abs(newGhostDirection-ghostDirection) !== 2
+  )
+}
+```
+
+Once this was set in place making the ghosts move away from PacMan when they were blue was as simple as looping through the relevant direction array in the reverse order. This can be seen in the above code where the options and directions array are reversed in the blue ghost phase.
 
 There was two things I learnt from this project: start small and refactor as you go.
 
