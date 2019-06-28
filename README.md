@@ -182,7 +182,7 @@ const canMove = function() {
 
 Once this was set in place making the ghosts move away from PacMan when they were blue was as simple as looping through the relevant direction array in the reverse order. This can be seen in the above code where the options and directions array are reversed in the blue ghost phase.
 
-## What I Learnt
+## Reflections
 
 There was two things I learnt from this project: start small and refactor as you go.
 
