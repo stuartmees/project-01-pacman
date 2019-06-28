@@ -57,15 +57,30 @@ PacMan movements: ← ↑ → ↓ keys
 7. The notification has an 'x' bottom right which has an event listener attached to it that means when it is clicked the notification element's .none class is toggled to turn the display of it to 'none' so it disappears. The user can then click the reset button to play again.
 
 
-
 ## Process
-_Describe the process of building the game. How did you get started? How did you manage your time? How would you do things next time?_
 
-Initially I generated the boxes that make up the game grid using JavaScript that looped over a 'for loop' a certain number of times creating a div element and appending it to its parent each time. These boxes were stored in an array, gridBoxes.
+# Set-up
+
+Initially I generated the boxes that make up the game grid using code that looped over a 'for loop' a certain number of times creating a div element and appending it to its parent each time. These boxes were stored in an array, gridBoxes.
 
 These boxes would eventually make up the wall and the paths in the maze.
 
+```
+//Creates the grid boxes and adds them to the game grid
+for(let i=0; i<(numberOfBoxes); i++){
+  const gridBox = document.createElement('div')
+  grid.appendChild(gridBox)
+  gridBox.classList.add('box')
+  gridBoxes.push(gridBox)
+}
+```
+
 A basic maze was made by adding a .wall class to some of the gridBox elements.
+
+```
+walls.forEach((wallIndex) => gridBoxes[wallIndex].classList.add('wall'))
+```
+# Pac-Man & Ghost basic movement
 
 First of all the arrow keys were made to move PacMan via an event listener. When the keys were pressed the relevant new position (gridBox) was calculated and via the move() function the .pacman class was removed from the current gridBox to the new gridBox position, by referencing their array ids.
 
@@ -76,14 +91,6 @@ Logic was added to both the move functions for PacMan and the ghost that checked
 Then I put the logic in that detected if PacMan and any ghost were in the same gridBox, and thus PacMan had been eaten. If this happened ghost positions were reset, their intervals cleared and set again and the score adjusted appropriately.
 
 ### Challenges and wins
-_Describe the biggest challenges.
-  How did you overcome them?
-  Did you decide to pivot because of time constraints?
-  What did you learn from these problems?_
-
-_Describe the wins.
-  What are you most proud of?
-  What did this project help you to understand the most?_
 
 My biggest challenge was making the ghosts appear to follow PacMan instead of just moving randomly. This was therefore also my biggest win.
 
@@ -175,6 +182,8 @@ const canMove = function() {
 
 Once this was set in place making the ghosts move away from PacMan when they were blue was as simple as looping through the relevant direction array in the reverse order. This can be seen in the above code where the options and directions array are reversed in the blue ghost phase.
 
+## What I Learnt
+
 There was two things I learnt from this project: start small and refactor as you go.
 
 I Initially started trying to work out recursive functions that could calculate the quickest route for the ghost before I had built in the smallest functionality. This wasted a lot of time at the start of my project. Even though a larger picture and aim is needed it is important to focus on small parts first individually first. When I finally did this I realised how the simplest of tasks can be more complex and take longer than expected. This gave me a more accurate idea of what I should be aiming for and made me find a more realistic and simpler approach to the ghosts movement.
@@ -182,7 +191,6 @@ I Initially started trying to work out recursive functions that could calculate 
 I also learnt the hard way that re-factoring should be an ongoing, real-time process throughout the project: I tried to re-factor towards the end in one batch and it was extremely time consuming to de-bug.
 
 ## Future features
-_If you were to revisit this project in the future what features would you add?_
 
 If I were to revisit this project I would give the ghosts different personalities. This could be as simple as giving the different ghost different time intervals or by making the differnt ghosts follow different logic for deciding direction. Some ghosts could move randomly, some prefer a given direction and some follow the logic I have given them.
 
